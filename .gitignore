@@ -4,7 +4,7 @@
 .__pycache__/
 *.pt
 *.pth
-CarinaAgentDisparitydataset.py
+*CarinaAgentDisparitydataset.py
 .devel/
 .build/
 .catkin_workspace
