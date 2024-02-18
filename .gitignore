@@ -1,0 +1,11 @@
+*.pyc
+*.json
+*.log
+.__pycache__
+.__pycache__
+*.pt
+*.pth
+.CarinaAgentDisparitydataset.py
+.devel
+.build
+.catkin_workspace

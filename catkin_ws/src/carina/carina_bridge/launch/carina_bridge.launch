@@ -1,0 +1,9 @@
+<!-- -->
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="carina_bridge" type="carina_bridge.py" name="carina_bridge" output="screen" />
+   <!--node pkg="carina_bridge" type="carina_bridge.py" name="carina_bridge" output="screen" >
+   	<rosparam file="$(find carina_master)/config/config_agent_params.yaml"/>
+   </node-->
+   
+</launch>

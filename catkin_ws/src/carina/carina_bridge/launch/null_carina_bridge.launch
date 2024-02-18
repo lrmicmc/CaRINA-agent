@@ -1,0 +1,5 @@
+<!-- -->
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+      <node pkg="carina_bridge" type="carina_bridge.py" name="carina_bridge" />
+</launch>

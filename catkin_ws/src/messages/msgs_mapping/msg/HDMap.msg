@@ -1,0 +1,3 @@
+std_msgs/Header header
+string XML_HDMap
+geometry_msgs/PoseWithCovarianceStamped pose

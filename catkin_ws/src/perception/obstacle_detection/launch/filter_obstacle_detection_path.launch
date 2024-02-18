@@ -1,0 +1,7 @@
+<!-- -->
+
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="obstacle_filter_path" type="obstacle_filter_path_node.py" name="obstacle_filter_path_node" output="screen" />
+
+</launch>

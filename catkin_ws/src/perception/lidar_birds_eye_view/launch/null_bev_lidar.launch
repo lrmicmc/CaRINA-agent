@@ -1,0 +1,6 @@
+<!-- -->
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="lidar_birds_eye_view" type="lidar_birds_eye_view_node" name="lidar_birds_eye_view_node"/>
+
+</launch>

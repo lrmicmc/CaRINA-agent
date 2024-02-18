@@ -1,0 +1,5 @@
+<!-- -->
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="create_dataset_imitation_learning" type="tracking_pointcloud_mm3d_dict.py" name="create_dataset" output="screen" />
+</launch>

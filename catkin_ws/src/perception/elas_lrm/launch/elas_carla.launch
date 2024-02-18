@@ -1,0 +1,21 @@
+<!-- -->
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+    <!-- Launches ELAS node, and rectification nodes for input --> 
+    <!-- Arguments: input stereo namespace and output elas namespace -->
+    <!--arg name="stereo" default="stereo/narrow"/-->
+    <arg name="stereo" default="/carina/sensor/camera"/>
+    <arg name="elas_ns" default="elas"/>
+    <!--group ns="$(arg stereo)/left">
+        <node name="left_rect" pkg="image_proc" type="image_proc"/>
+    </group-->
+<!--
+    <group ns="$(arg stereo)/right">
+        <node name="right_rect" pkg="image_proc" type="image_proc"/>
+    </group>
+--> 
+    <node name="$(arg elas_ns)" pkg="elas_lrm" type="elas_lrm_node" output="screen">
+        <remap from="stereo" to="$(arg stereo)"/>
+        <remap from="image" to="image_raw"/>
+    </node>
+</launch>

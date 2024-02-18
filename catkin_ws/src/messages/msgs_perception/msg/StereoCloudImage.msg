@@ -1,0 +1,2 @@
+sensor_msgs/PointCloud2 point_cloud
+sensor_msgs/Image left_image

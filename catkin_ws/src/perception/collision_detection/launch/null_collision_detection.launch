@@ -1,0 +1,7 @@
+<!-- -->
+
+<launch>
+
+   <node pkg="collision_detection" type="collision_detection_node.py"    name="collision_detection_node"/>
+
+</launch>

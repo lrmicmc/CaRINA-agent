@@ -1,0 +1,7 @@
+<!-- -->
+
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="control" type="longitudinal_control.py" name="longitudinal_control_node" output="screen" />
+
+</launch>

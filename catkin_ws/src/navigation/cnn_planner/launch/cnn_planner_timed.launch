@@ -1,0 +1,5 @@
+<!-- -->
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="timed_roslaunch" type="timed_roslaunch.sh" args="160 cnn_planner cnn_planner.launch" name="timed_roslaunch" output="screen" />
+</launch>

@@ -1,0 +1,7 @@
+<!-- -->
+
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="decision_making" type="fsm_node.py" name="fsm_node" output="screen"/>
+
+</launch>

@@ -1,0 +1,5 @@
+<!-- -->
+
+<launch>
+   <node pkg="carina_3d_detection" type="pointcloud_3d_detection.py"    name="carina_3d_detection_node" />
+</launch>

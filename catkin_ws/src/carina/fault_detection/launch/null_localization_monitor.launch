@@ -1,0 +1,5 @@
+<!-- -->
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="fault_detection" type="localization_monitor.py" name="localization_monitor"/>
+</launch>

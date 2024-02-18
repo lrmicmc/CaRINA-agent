@@ -1,0 +1,7 @@
+<!-- -->
+
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="global_path_planning" type="global_path_planning_node.py" name="global_path_planning_node" output="screen"/>
+
+</launch>

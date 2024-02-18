@@ -1,0 +1,58 @@
+<!-- -->
+
+
+<launch>
+	<param name ="/use_sim_time" value="true"/>
+    <!--group name="carina_carla_challenge"-->
+        <include file="$(find carina_description)/launch/null_carina2.launch"/>
+        
+        <!-- perception stack -->
+
+        <!--   velodyne   -->
+        <!--include file="$(find velodyne_height_map)/launch/null_height_map.launch"/-->
+        <include file="$(find polar_height_map)/launch/null_polar_height_map.launch"/>
+        <include file="$(find obstacle_detection)/launch/null_obstacle_detection.launch"/>
+        <!--include file="$(find dbscan_pointcloud)/launch/null_clustering.launch"/-->
+
+        <!--    camera    -->
+        <include file="$(find elas_lrm)/launch/null_elas_carla.launch"/>
+        <!--include file="$(find yolov5)/launch/null_yolov5.launch"/-->
+        <!--include file="$(find tfsignals_stereo2_3d)/launch/null_stereo2odom.launch"/-->
+        <!--include file="$(find traffic_signs)/launch/null_detector.launch"/-->
+
+        <!-- navigation stack -->
+        <include file="$(find mpc_traj_generator)/launch/null_mpc_control.launch"/>
+        <include file="$(find decision_making)/launch/null_decision_making.launch"/>
+        <include file="$(find global_plan_monitor)/launch/null_global_plan_monitor.launch"/>
+        <include file="$(find control)/launch/null_longitudinal_control.launch"/> 
+        <include file="$(find lidar_birds_eye_view)/launch/null_bev_lidar.launch"/>
+        <!--include file="$(find local_path_planning)/launch/path_planning.launch"/-->
+        <include file="$(find local_path_planning)/launch/path_planning_create_dataset.launch"/>
+         
+        <include file="$(find collision_detection)/launch/null_collision_detection.launch"/>
+        
+        <!--include file="$(find cnn_planner)/launch/null_cnn_planner.launch"/-->
+        
+        <!--include file="$(find scenario_det)/launch/scenario_det.launch"/-->
+        
+        
+        
+        
+        
+        <include file="$(find create_dataset_imitation_learning)/launch/create_dataset_il.launch"/>
+
+
+
+
+
+        <!--include file="$(find cnn_planner)/launch/cnn_planner_timed.launch"/-->
+        <!--include file="$(find cnn_planner)/launch/null_cnn_planner_timed.launch"/-->
+        <!--include file="$(find collision_detection)/launch/null_collision_detection.launch"/-->
+
+        <!--include file="$(find carla_challenge_launch)/launch/launch_stack.launch"/-->
+        
+        <!-- <include file="$(find camera_signs_detection)/launch/null_signs_detection.launch"/>-->
+        
+        
+    <!--/group-->    
+</launch>

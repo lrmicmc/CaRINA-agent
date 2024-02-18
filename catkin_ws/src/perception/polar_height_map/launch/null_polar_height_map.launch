@@ -1,0 +1,7 @@
+<!-- -->
+
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="polar_height_map" type="polarheightmap_node" name="polar_height_map_node"/>
+
+</launch>

@@ -1,0 +1,7 @@
+<!-- -->
+
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="traffic_signs" type="traffic_signs_node2.py" name="traffic_signs_detector_node2"/>
+
+</launch>

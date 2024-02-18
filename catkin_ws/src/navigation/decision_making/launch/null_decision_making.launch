@@ -1,0 +1,7 @@
+<!-- -->
+
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="decision_making" type="decision_making_node.py" name="decision_making_node"/>
+
+</launch>

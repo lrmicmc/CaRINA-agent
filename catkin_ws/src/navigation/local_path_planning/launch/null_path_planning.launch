@@ -1,0 +1,7 @@
+<!-- -->
+
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="local_path_planning" type="local_path_planning_node.py" name="local_path_planning_node"/>
+
+</launch>

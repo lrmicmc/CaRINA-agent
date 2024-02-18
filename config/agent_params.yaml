@@ -1,0 +1,51 @@
+cameras:
+  stereo:
+    fov: 71 #91 #122 #cameras fov     #fov=30.6             #cameras fov  argo
+    baseline: 0.24    #baseline=0.2986      #argo
+    width: 1200 
+    height: 1200
+
+  mono:
+    cam0:
+      fov: 122 #cameras fov
+      width: 1600 
+      height: 1600
+    
+    cam1:
+      fov: 122 #cameras fov
+      width: 1600 
+      height: 1600
+    
+    cam2:
+      fov: 122 #cameras fov
+      width: 1600 
+      height: 1600
+    
+    cam3:
+      fov: 122 #cameras fov
+      width: 1600 
+      height: 1600
+      
+    cam_back:
+      fov: 10 #cameras fov
+      width: 640 
+      height: 640
+dataset:
+  create_dataset_path: True #False
+  create_dataset_images: True #False
+  create_dataset_depth: True #False
+  create_occupancy_grid: True #False
+  create_dataset_obstacles: True #False
+  
+  lateral_control_noise:   False #True #
+  
+  root_folder: "/mnt/Data1/carla_dataset"
+  train_test_folder: "validation" # "train"
+  
+  spectator: False
+  
+  
+navigation:
+  control:
+    max_speed: 8.88 #m/s
+  replanning: False

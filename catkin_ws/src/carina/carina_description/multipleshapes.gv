@@ -1,0 +1,23 @@
+digraph G {
+node [shape=box];
+"base_footprint" [label="base_footprint"];
+"base_link" [label="base_link"];
+"bumblebee" [label="bumblebee"];
+"gps_link" [label="gps_link"];
+"imu_link" [label="imu_link"];
+"ladybug_link" [label="ladybug_link"];
+"velodyne" [label="velodyne"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"base_footprint" -> "base_footprint_joint" [label="xyz: 0 0 0.33 \nrpy: 0 -0 0"]
+"base_footprint_joint" -> "base_link"
+"base_link" -> "base_link_bumblebee_joint" [label="xyz: -0.3 0 1.49 \nrpy: 0 -0 0"]
+"base_link_bumblebee_joint" -> "bumblebee"
+"base_link" -> "base_link_gps_joint" [label="xyz: -0.59 0 1.27 \nrpy: 0 -0 0"]
+"base_link_gps_joint" -> "gps_link"
+"base_link" -> "base_link_imu_joint" [label="xyz: -1.31 0 1.2 \nrpy: 0 -0 0"]
+"base_link_imu_joint" -> "imu_link"
+"base_link" -> "base_link_ladybug_joint" [label="xyz: -1.14 0 1.84 \nrpy: 0 -0 0"]
+"base_link_ladybug_joint" -> "ladybug_link"
+"base_link" -> "base_link_velodyne_joint" [label="xyz: -0.3 0 1.677 \nrpy: 0 -0 0"]
+"base_link_velodyne_joint" -> "velodyne"
+}

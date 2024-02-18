@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<robot name="carina2">
+
+
+  <link name="base_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+         <mesh filename="package://carina_description/meshes/collada/carina2/carina2.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="base_link_velodyne_joint" type="fixed">
+    <origin xyz="0 0 2.25" rpy="0 0 0" />
+      <parent link="base_link"/>
+    <child link="velodyne"/>  
+  </joint>
+
+  <link name="velodyne">
+    <inertial>
+      <mass value="2" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+    </inertial>
+    
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <!--cylinder radius="0.04265" length="0.14"/-->
+        <cylinder radius="0." length="0."/>
+      </geometry>
+      <material name="Gray">
+        <!--color rgba="0.545 0.545 0.537 1"/-->
+        <color rgba="0. 0. 0. 0"/>
+      </material>
+    </visual>
+    
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <cylinder radius="0.05" length="0.14"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_link_stereo_joint" type="fixed">
+    <!--origin xyz="0 0 2.0" rpy="-1.483574105 0 -1.570796327" /-->
+    <origin xyz="0 0 2.8" rpy="-1.570796327 0 -1.570796327" />
+      <parent link="base_link"/>
+    <child link="stereo"/>  
+  </joint>
+
+  <link name="stereo">
+    <inertial>
+      <mass value="2" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+    </inertial>
+    
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <!--box size="0.0474 0.157 0.036"/-->
+        <box size="0. 0. 0.0"/>
+      </geometry>
+      <material name="Gold">
+        <!--color rgba="0.878 0.690 0.356 1"/-->
+        <color rgba="0. 0. 0. 0"/>
+      </material>
+    </visual>
+  </link>
+
+ 
+
+  <joint name="base_link_gps_joint" type="fixed">
+    <origin xyz="0 0 2.0" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="gps"/>
+  </joint>
+
+  <link name="gps">
+    <inertial>
+      <mass value="0.001"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <!--box size="0.058 0.050 0.032"/-->
+        <box size="0. 0. 0."/>
+      </geometry>
+      <material name="Gray">
+        <!--color rgba="0.545 0.545 0.537 1"/-->
+        <color rgba="0. 0. 0. 0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+
+
+
+  <joint name="base_link_imu_joint" type="fixed">
+    <origin xyz="0 0 2.0" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="imu"/>
+  </joint>
+
+  <link name="imu">
+    <inertial>
+      <mass value="0.001"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.018 0.018 0.018"/>
+      </geometry>
+      <material name="Gray">
+        <!--color rgba="0.545 0.545 0.537 1"/-->
+        <color rgba="0. 0. 0. 0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>

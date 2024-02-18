@@ -1,0 +1,9 @@
+<library path="lib/libpolarheightmap_nodelet">
+  <class name="polar_height_map/HeightMapNodelet"
+         type="polar_height_map::HeightMapNodelet"
+         base_class_type="nodelet::Nodelet">
+    <description> 
+      Publish height map obstacles as PointCloud2.
+    </description>
+  </class>
+</library>

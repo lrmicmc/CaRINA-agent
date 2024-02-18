@@ -1,0 +1,5 @@
+<!-- -->
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+   <node pkg="create_dataset_imitation_learning" type="create_dataset_trainig_il.py" name="create_dataset_il" output="screen" />
+</launch>

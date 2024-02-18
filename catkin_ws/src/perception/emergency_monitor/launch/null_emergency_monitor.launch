@@ -1,0 +1,5 @@
+<!-- -->
+
+<launch>
+      <node pkg="emergency_monitor" type="emergency_monitor_node.py"    name="emergency_monitor_node" />
+</launch>
