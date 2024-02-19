@@ -1,0 +1,10 @@
+*.pyc
+*.json
+*.log
+.__pycache__/
+*.pt
+*.pth
+
+
+
+
