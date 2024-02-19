@@ -1,8 +1,0 @@
-prefix=/home/luis/carla/TRACK/team_code/catkin_ws/install
-
-Name: carina_description
-Description: Description of carina_description
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

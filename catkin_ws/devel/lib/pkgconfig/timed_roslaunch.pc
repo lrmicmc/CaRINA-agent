@@ -1,8 +1,0 @@
-prefix=/home/luis/carla/TRACK/team_code/catkin_ws/devel
-
-Name: timed_roslaunch
-Description: Description of timed_roslaunch
-Version: 0.1.4
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

@@ -1,2 +1,0 @@
-set(msgs_perception_MESSAGE_FILES "/home/luis/carla/TRACK/team_code/catkin_ws/src/messages/msgs_perception/msg/Obstacle.msg;/home/luis/carla/TRACK/team_code/catkin_ws/src/messages/msgs_perception/msg/ObstacleArray.msg;/home/luis/carla/TRACK/team_code/catkin_ws/src/messages/msgs_perception/msg/BoundingBox.msg;/home/luis/carla/TRACK/team_code/catkin_ws/src/messages/msgs_perception/msg/BoundingBoxArray.msg;/home/luis/carla/TRACK/team_code/catkin_ws/src/messages/msgs_perception/msg/StereoCloudImage.msg")
-set(msgs_perception_SERVICE_FILES "")

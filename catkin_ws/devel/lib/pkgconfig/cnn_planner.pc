@@ -1,8 +1,0 @@
-prefix=/home/luis/carla/TRACK/team_code/catkin_ws/devel
-
-Name: cnn_planner
-Description: Description of cnn_planner
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

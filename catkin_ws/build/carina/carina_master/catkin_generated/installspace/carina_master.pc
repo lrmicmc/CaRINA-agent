@@ -1,8 +1,0 @@
-prefix=/home/luis/carla/TRACK/team_code/catkin_ws/install
-
-Name: carina_master
-Description: Description of carina_master
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: control decision_making elas_lrm global_path_planning local_path_planning mpc_traj_generator msgs_action msgs_mapping msgs_navigation msgs_perception msgs_traffic traffic_signs

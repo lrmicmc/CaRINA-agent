@@ -1,8 +1,0 @@
-prefix=/home/luis/carla/TRACK/team_code/catkin_ws/install
-
-Name: ros_numpy
-Description: Description of ros_numpy
-Version: 0.0.2
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

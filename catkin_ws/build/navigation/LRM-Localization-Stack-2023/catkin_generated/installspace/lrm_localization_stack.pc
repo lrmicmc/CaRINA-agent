@@ -1,8 +1,0 @@
-prefix=/home/luis/carla/TRACK/team_code/catkin_ws/install
-
-Name: lrm_localization_stack
-Description: Description of lrm_localization_stack
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
