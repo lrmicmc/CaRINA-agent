@@ -1,8 +1,0 @@
-prefix=/home/luis/carla/TRACK/team_code/catkin_ws/install
-
-Name: polar_height_map
-Description: Description of polar_height_map
-Version: 0.4.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: nodelet roscpp pcl_ros std_msgs sensor_msgs tf

@@ -1,2 +1,0 @@
-set(msgs_traffic_MESSAGE_FILES "/home/luis/carla/TRACK/team_code/catkin_ws/src/messages/msgs_traffic/msg/signs.msg;/home/luis/carla/TRACK/team_code/catkin_ws/src/messages/msgs_traffic/msg/traffic_light.msg;/home/luis/carla/TRACK/team_code/catkin_ws/src/messages/msgs_traffic/msg/TrafficSign.msg;/home/luis/carla/TRACK/team_code/catkin_ws/src/messages/msgs_traffic/msg/TrafficSignArray.msg")
-set(msgs_traffic_SERVICE_FILES "")

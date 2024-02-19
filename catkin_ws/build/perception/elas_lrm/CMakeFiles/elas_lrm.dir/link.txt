@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -w -msse3 -O3 -fopenmp  -shared -Wl,-soname,libelas_lrm.so -o /home/luis/carla/TRACK/team_code/catkin_ws/devel/lib/libelas_lrm.so CMakeFiles/elas_lrm.dir/src/descriptor.cpp.o CMakeFiles/elas_lrm.dir/src/elas.cpp.o CMakeFiles/elas_lrm.dir/src/filter.cpp.o CMakeFiles/elas_lrm.dir/src/matrix.cpp.o CMakeFiles/elas_lrm.dir/src/triangle.cpp.o 
