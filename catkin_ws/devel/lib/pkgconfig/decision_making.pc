@@ -1,0 +1,8 @@
+prefix=/home/luis/carla/TRACK/team_code/catkin_ws/devel
+
+Name: decision_making
+Description: Description of decision_making
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

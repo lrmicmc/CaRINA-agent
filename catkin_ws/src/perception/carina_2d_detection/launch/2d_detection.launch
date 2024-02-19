@@ -1,7 +1,0 @@
-<!-- -->
-
-<launch>
-
-   <node pkg="carina_2d_detection" type="rgb_2d_detection.py"    name="rgb_2d_detection_node" output="screen" />
-
-</launch>

@@ -1,0 +1,8 @@
+prefix=/home/luis/carla/TRACK/team_code/catkin_ws/devel
+
+Name: elas_lrm
+Description: Description of elas_lrm
+Version: 0.0.0
+Cflags: -I/home/luis/carla/TRACK/team_code/catkin_ws/src/perception/elas_lrm/include
+Libs: -L${prefix}/lib 
+Requires: 

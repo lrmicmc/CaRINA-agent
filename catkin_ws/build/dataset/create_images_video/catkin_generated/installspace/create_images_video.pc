@@ -1,0 +1,8 @@
+prefix=/home/luis/carla/TRACK/team_code/catkin_ws/install
+
+Name: create_images_video
+Description: Description of create_images_video
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/luis/carla/TRACK/team_code/catkin_ws/install
+
+Name: elas_lrm
+Description: Description of elas_lrm
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/luis/carla/TRACK/team_code/catkin_ws/devel
+
+Name: lidar_birds_eye_view
+Description: Description of lidar_birds_eye_view
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
