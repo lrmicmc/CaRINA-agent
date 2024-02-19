@@ -5,6 +5,6 @@
 *.pt
 *.pth
 .CarinaAgentDisparitydataset.py
-.devel/
-.build/
+devel/
+build/
 .catkin_workspace
