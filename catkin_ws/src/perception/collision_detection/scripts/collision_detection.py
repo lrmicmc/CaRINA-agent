@@ -641,8 +641,8 @@ class CollisionDetection(object):
 						pol_viz.polygon.points.append(p.point)
 					self.tfl_red_area.publish(pol_viz)
 
-
-			if(l_ob.intersects(self.path_shapely_dilated1)):# or l_ob.intersects(self.back_l_ob_ego_dilated)):
+			if(l_ob.intersects(self.path_shapely_dilated1) or (l_ob.intersects(self.back_l_ob_ego_dilated) and 'traffic_light_red' in obs.classes) ):
+			# if(l_ob.intersects(self.path_shapely_dilated1)):# or l_ob.intersects(self.back_l_ob_ego_dilated)):
 				# print('stoping traffic light red')
 				# plt.plot(x,y, 'ko', markersize=2)
 				# print ('obs traffic light')
@@ -661,7 +661,7 @@ class CollisionDetection(object):
 						pol_viz.polygon.points.append(p.point)
 					self.tfl_red_area.publish(pol_viz)
 
-			if(l_ob.intersects(self.path_shapely_dilated1)) or (l_ob.intersects(self.path_shapely_dilated2)): #or (l_ob.intersects(self.back_l_ob_ego_dilated)):
+			if(l_ob.intersects(self.path_shapely_dilated1)) or (l_ob.intersects(self.path_shapely_dilated2)) or (l_ob.intersects(self.back_l_ob_ego_dilated) and 'traffic_light_red' in obs.classes):
 				# try:
 				# 	trans = self.tf2_buffer_blink2odom.lookup_transform('velodyne', 'map', rospy.Time())
 				# 	# stamp = rospy.Time().now()

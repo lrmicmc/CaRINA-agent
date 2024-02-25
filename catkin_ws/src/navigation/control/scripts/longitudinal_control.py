@@ -49,7 +49,7 @@ class LongitudinalControl(object):
 		self.previous_emergency_stop = False
 		self.speed_constraint = -1
 		self.last_speed_zero = None
-		self.timeout_emergency_stop = 120.0
+		self.timeout_emergency_stop = 160.0
 		#self.timeout_emergency_stop = 90
 		self.ignore_emergency_stop = False
 		self.longitudinal_control = PID_long_control(0)

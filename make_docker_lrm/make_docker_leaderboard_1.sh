@@ -79,6 +79,6 @@ cp ${TEAM_CODE_ROOT}/agent_entrypoint.sh .tmp/agent_entrypoint.sh
 cp ${TEAM_CODE_ROOT}/bashrc/.bashrc .tmp/.bashrc
 # build docker image
 #docker build --force-rm -t leaderboard-sensors -f ${LEADERBOARD_ROOT}/scripts/Dockerfile_leaderboard_melodic.ros .
-#docker build --force-rm -t leaderboard-sensors -f ${TEAM_CODE_ROOT}/make_docker_lrm/Dockerfile_leaderboard.ros .
-docker build --force-rm -t leaderboard-map -f ${TEAM_CODE_ROOT}/make_docker_lrm/Dockerfile_leaderboard.ros .
+docker build --force-rm -t leaderboard-sensors -f ${TEAM_CODE_ROOT}/make_docker_lrm/Dockerfile_leaderboard.ros .
+#docker build --force-rm -t leaderboard-map -f ${TEAM_CODE_ROOT}/make_docker_lrm/Dockerfile_leaderboard.ros .
 rm -fr .tmp

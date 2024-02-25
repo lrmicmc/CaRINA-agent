@@ -1,0 +1,9 @@
+<!-- -->
+<launch>
+   <param name ="/use_sim_time" value="true"/>
+  <node pkg="yolov5" name="traffic_light_det_node" type="traffic_light_det.py"  output="screen">
+	<param name="image_topic" value="/carina/sensor/camera/left/image_raw" />
+	<!--param name="image_topic" value="/stereo_camera/left/image_raw" /-->
+  </node>
+  <!--node name="soundplay_node" pkg="sound_play" type="soundplay_node.py"/-->
+</launch>

@@ -70,6 +70,7 @@
         	<include file="$(find carina_3d_detection)/launch/null_3d_detection.launch"/>
         	<include file="$(find lrm_lidar_object_tracking)/launch/null_mot_tracker.launch"/>
         	<!--include file="$(find lrm_lidar_object_tracking)/launch/null_mot_tracker_stereo.launch"/-->
+		<include file="$(find yolov5)/launch/null_yolov5.launch"/>     
   	</group>
 	<group if="$(eval track == 'MAP')">
 		<include file="$(find elas_lrm)/launch/null_elas_carla.launch"/>
@@ -88,11 +89,11 @@
         	<include file="$(find lidar_birds_eye_view)/launch/null_bev_lidar.launch"/>
         	<include file="$(find local_path_planning)/launch/null_path_planning.launch"/> 
         	<include file="$(find lrm_lidar_object_tracking)/launch/null_mot_tracker_dataset.launch"/>
-        	<!--include file="$(find carina_2d_detection)/launch/null_2d_detection.launch"/-->
+        	<include file="$(find carina_2d_detection)/launch/null_2d_detection.launch"/>
         	<include file="$(find create_dataset_imitation_learning)/launch/create_dataset_il.launch"/>
         	<!--include file="$(find create_dataset_imitation_learning)/launch/create_dataset_tracking.launch"/-->
         	<!--include file="$(find create_dataset_imitation_learning)/launch/create_dataset_tracking_dict_v2.launch"/-->
-		<include file="$(find yolov5)/launch/null_yolov5.launch"/>     
+
   	</group>
    
 

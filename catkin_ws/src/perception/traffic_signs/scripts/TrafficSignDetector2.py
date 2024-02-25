@@ -54,6 +54,8 @@ class TrafficSignDetector(object):
 		self.timeout_traffic_light = 120.0 #seg
 		self.range_light_dist2path = 5.0
 
+		self.msg_yolo=None
+
 		##########################################
 		# STOP
 		self.range_stop_sign2path = 4.0
@@ -72,7 +74,9 @@ class TrafficSignDetector(object):
 
 		# SUBS
 		#self.signs_object_sub = rospy.Subscriber('/carina/perception/fusion/bbox_2Dto3D', ObstacleArray, self.signs_object_cb, queue_size=1)
+		self.signs_object_yolo_sub = rospy.Subscriber('/carina/perception/stereo/traffic_sign_odom_yolo', ObstacleArray, self.signs_yolo_object_cb, queue_size=1)
 		self.signs_object_sub = rospy.Subscriber('/carina/perception/stereo/traffic_sign_odom', ObstacleArray, self.signs_object_cb, queue_size=1)
+
 		self.shutdown_sub = rospy.Subscriber('/carina/vehicle/shutdown', Bool, self.shutdown_cb, queue_size=1)
 		self.path_sub = rospy.Subscriber("/carina/navigation/path_segment", Path, self.path_cb, queue_size=1)
 		self.path_sub = rospy.Subscriber("/carina/navigation/cnn_path", Path, self.cnn_path_cb, queue_size=1)
@@ -201,7 +205,13 @@ class TrafficSignDetector(object):
 		self.lines_to_traffic_signs_pub.publish(self.markerArray)
 
 
+	def signs_yolo_object_cb(self, msg):
+		self.msg_yolo=msg
+			
+
 	def signs_object_cb(self, msg):
+		if self.msg_yolo is not None:
+			msg.obstacle=msg.obstacle + self.msg_yolo.obstacle
 		if self.global_plan==None:
 			return
 
