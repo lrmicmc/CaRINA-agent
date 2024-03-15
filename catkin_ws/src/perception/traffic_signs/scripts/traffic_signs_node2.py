@@ -354,7 +354,7 @@ class TrafficLightPosition(object):
 		if(i_monitor_path+64>=len(self.path)):
 			path_ahead_1=self.path[  i_monitor_path:min(i_monitor_path,len(self.path))     , 0:2]
 		else:
-			path_ahead_1=self.path[i_monitor_path+14:i_monitor_path+64, 0:2]
+			path_ahead_1=self.path[i_monitor_path+14:i_monitor_path+100, 0:2]
 
 		path_shapely_1 = LineString(path_ahead_1)
 		self.path_shapely_dilated1 = path_shapely_1.buffer(1.0)
