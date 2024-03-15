@@ -133,6 +133,7 @@ def state_callback(msg):
 
 
 def path_callback(msg):
+	start_time = time.time()
 	# global path_cnn, trun_option_msg
 	global trun_option_msg
 
@@ -163,8 +164,11 @@ def path_callback(msg):
 			mpc_control.update_ref(waypoints)
 	
 		pathReceived = True
+	print("--- %s seconds ---" % (time.time() - start_time))
 
 def cnn_path_callback(msg):
+	start_time = time.time()
+
 	global path_cnn#, trun_option_msg
 	# print('trun_option_msg',trun_option_msg)
 	# path_cnn=msg
@@ -189,6 +193,7 @@ def cnn_path_callback(msg):
 			mpc_control.update_ref(waypoints)
 	
 		pathReceived = True
+	print("--- %s seconds ---" % (time.time() - start_time))
 
 
 def turn_option(msg):

@@ -643,7 +643,7 @@ class CollisionDetection(object):
 
 			if(l_ob.intersects(self.path_shapely_dilated1) or (l_ob.intersects(self.back_l_ob_ego_dilated) and 'traffic_light_red' in obs.classes) ):
 			# if(l_ob.intersects(self.path_shapely_dilated1)):# or l_ob.intersects(self.back_l_ob_ego_dilated)):
-				# print('stoping traffic light red')
+				print('stoping traffic light red')
 				# plt.plot(x,y, 'ko', markersize=2)
 				# print ('obs traffic light')
 				collision=True

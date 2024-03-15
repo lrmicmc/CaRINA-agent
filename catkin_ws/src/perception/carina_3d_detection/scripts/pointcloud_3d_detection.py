@@ -70,6 +70,7 @@ class PointCloud3Ddetection(object):
 		return math.atan2(np.sin(angle), np.cos(angle))
 
 	def lidar_point_cloud_cb(self,data):
+		start_time = time.time()
 		if self.model==None:
 			return
 		# print('lidar')
@@ -350,6 +351,7 @@ class PointCloud3Ddetection(object):
 
 		# 	except CvBridgeError as e:
 		# 		print (e)
+		print("--- %s seconds ---" % (time.time() - start_time))
 
 	def shutdown_cb(self, msg):
 		if msg.data:

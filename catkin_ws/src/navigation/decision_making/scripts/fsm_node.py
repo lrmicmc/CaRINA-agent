@@ -13,6 +13,7 @@ from nav_msgs.msg import Odometry
 from msgs_traffic.msg import TrafficSign, TrafficSignArray
 from msgs_navigation.msg import EmergencyStop
 from std_msgs.msg import String
+import time
 
 class FSM(object):
 
@@ -80,6 +81,8 @@ class FSM(object):
 
 	def vehicle_state_cb(self, msg):
 		# print('vehicle state cb')
+		start_time=time.time()
+
 		self.speed = msg.drive.speed
 
 
@@ -247,6 +250,7 @@ class FSM(object):
 			
 		self.fsm_state.publish(self.names_state[self.state])
 		self.pub_speed_ref()
+		print("--- %s seconds ---" % (time.time() - start_time))
 
 
 

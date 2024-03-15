@@ -16,12 +16,12 @@ import time
 
 import math
 #ros messages
-# from geometry_msgs.msg import Polygon, PolygonStamped, PointStamped, PoseWithCovarianceStamped
+# from geometry_msgs.msg import Polygon, PolygonStamped, PointStamped, PoseWithCovarianceStamped, PoseStamped, Point, PolygonStamped
 
 from msgs_traffic.msg import TrafficSign, TrafficSignArray
-from geometry_msgs.msg import PoseStamped, Point, PolygonStamped
+# from geometry_msgs.msg import PoseStamped, Point, PolygonStamped
 from msgs_perception.msg import Obstacle, ObstacleArray
-from geometry_msgs.msg import PoseWithCovarianceStamped
+# from geometry_msgs.msg import PoseWithCovarianceStamped
 from std_msgs.msg import Bool
 from msgs_navigation.msg import Path
 from msgs_navigation.msg import GlobalPlan
@@ -211,9 +211,19 @@ class TrafficSignDetector(object):
 
 	def signs_object_cb(self, msg):
 		if self.msg_yolo is not None:
-			msg.obstacle=msg.obstacle + self.msg_yolo.obstacle
+			# msg.obstacle=msg.obstacle + self.msg_yolo.obstacle
+			msgobstacle_all=msg.obstacle + self.msg_yolo.obstacle
+		else:
+			msgobstacle_all=msg.obstacle
+
+
 		if self.global_plan==None:
 			return
+
+		# print ('self.msg_yolo.obstacle ', len(self.msg_yolo.obstacle))
+		# print ('msg obstacle   ', len(msg.obstacle))
+		# print ('msgobstacle ', len(msgobstacle_all))
+		# print()
 
 		global_plan=self.global_plan		
 		stamp = self.stamp
@@ -226,7 +236,7 @@ class TrafficSignDetector(object):
 		self.markerArrayObs.markers=[]
 		self.obstacle_Array.obstacle=[]
 
-		if (self.current_pose is not None) and (len(self.path) > 0) and len(msg.obstacle)>0: 
+		if (self.current_pose is not None) and (len(self.path) > 0) and len(msgobstacle_all)>0: 
 			curr_pose = np.array([self.current_pose.pose.pose.position.x, self.current_pose.pose.pose.position.y])
 
 			#path segment from the current pose of the vehicle and an warnign safe distance
@@ -236,26 +246,26 @@ class TrafficSignDetector(object):
 
 			path_segment = self.path[i_min_dist_pose2path:i_max_dist_pose2path, 0:2]
 			
-			indexes = np.arange(0, len(msg.obstacle))
+			indexes = np.arange(0, len(msgobstacle_all))
 			
 			signs_array_light = []
-			signs_array_light = np.array([i for i, o  in zip(indexes, msg.obstacle) if ('light' in o.classes[o.class_id])])
+			signs_array_light = np.array([i for i, o  in zip(indexes, msgobstacle_all) if ('light' in o.classes[o.class_id])])
 
 			signs_array_speed_limit = []
-			signs_array_speed_limit = np.array([i for i, o in zip(indexes, msg.obstacle) \
+			signs_array_speed_limit = np.array([i for i, o in zip(indexes, msgobstacle_all) \
 				if (('30' in o.classes[o.class_id]) or ('60' in o.classes[o.class_id]) or ('90' in o.classes[o.class_id]))])
 
 			signs_array_stop = []
-			signs_array_stop = np.array([i for i, o in zip(indexes, msg.obstacle) if ('stop' in o.classes[o.class_id])])
+			signs_array_stop = np.array([i for i, o in zip(indexes, msgobstacle_all) if ('stop' in o.classes[o.class_id])])
 						
-			if (0 < len(signs_array_light) <= 12):
+			if (len(signs_array_light)>0):
 				
 				signs_pose = []
 
 				stamp = self.stamp
 				for i in signs_array_light:
 
-					if msg.obstacle[i].pose.position.z > 2.0:
+					if msgobstacle_all[i].pose.position.z > 2.0:
 						q = self.current_pose.pose.pose.orientation
 						# Get yaw
 						ori = (q.x,
@@ -264,10 +274,10 @@ class TrafficSignDetector(object):
 								q.w)
 						_, _, theta = tf.transformations.euler_from_quaternion(ori)
 
-						msg.obstacle[i].pose.position.x = msg.obstacle[i].pose.position.x - 3.50*np.cos(theta)   
-						msg.obstacle[i].pose.position.y = msg.obstacle[i].pose.position.y - 3.50*np.sin(theta)  
+						msgobstacle_all[i].pose.position.x = msgobstacle_all[i].pose.position.x - 3.50*np.cos(theta)   
+						msgobstacle_all[i].pose.position.y = msgobstacle_all[i].pose.position.y - 3.50*np.sin(theta)  
 
-					signs_pose.append([msg.obstacle[i].pose.position.x, msg.obstacle[i].pose.position.y])
+					signs_pose.append([msgobstacle_all[i].pose.position.x, msgobstacle_all[i].pose.position.y])
 
 				# signs_pose = np.array([[obst.pose.position.x, obst.pose.position.y] for obst in msg.obstacle])
 				signs_pose = np.asarray(signs_pose)
@@ -298,8 +308,8 @@ class TrafficSignDetector(object):
 						continue
 
 					poligon =None
-					for obj in msg.obstacle:
-						if len(msg.obstacle)> 4 and m.ns =="one_tfl":
+					for obj in msgobstacle_all:
+						if len(msgobstacle_all)> 4 and m.ns =="one_tfl":
 							continue
 
 						if obj.pose.position.z > 3.0 and m.ns =="one_tfl":
@@ -418,7 +428,7 @@ class TrafficSignDetector(object):
 					# msg.obstacle[i].pose.position.x = new_pose.pose.position.x
 					# msg.obstacle[i].pose.position.y = new_pose.pose.position.y
 
-					signs_pose.append([msg.obstacle[i].pose.position.x, msg.obstacle[i].pose.position.y])
+					signs_pose.append([msgobstacle_all[i].pose.position.x, msgobstacle_all[i].pose.position.y])
 					# signs_pose.append([new_pose.pose.position.x, new_pose.pose.position.y])
 					
 				# except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
@@ -441,7 +451,7 @@ class TrafficSignDetector(object):
 							i_min = i 
 
 					if i_min >= 0:
-						obj = msg.obstacle[i_min]
+						obj = msgobstacle_all[i_min]
 
 						s = TrafficSign()
 						s.name = obj.classes[obj.class_id]

@@ -13,6 +13,7 @@ from geometry_msgs.msg import Pose
 from geometry_msgs.msg import PoseArray
 
 from msgs_perception.msg import ObstacleArray, Obstacle, StereoCloudImage
+from geometry_msgs.msg import PoseWithCovarianceStamped
 
 import tf
 
@@ -37,7 +38,7 @@ import torch
 from sensor_msgs.msg import Image
 
 import copy
-
+import time
 
 import struct
 from std_msgs.msg import Header
@@ -114,6 +115,8 @@ class TrafficLightDetection(object):
 
         self.pc=None
 
+        self.current_pose=None
+
         self.device = select_device('0')
 
         # Load model
@@ -140,9 +143,6 @@ class TrafficLightDetection(object):
         if self.pt and self.device.type != 'cpu':
              self.model(torch.zeros(1, 3, *self.imgsz).to(self.device).type_as(next( self.model.parameters())))  # run once
 
-        #publisher
-        self.pub_obj = rospy.Publisher("/carina/perception/camera/signs_bb_yolo", BoundingBoxArray, queue_size=1)
-        self.pub_img = rospy.Publisher('/carina/perception/camera/image_bb_yolo', Image, queue_size=1)
 
         #subscriber
         self.image_topic = rospy.get_param('/obstacle_detection_node/image_topic', '/carina/sensor/stereo/left_image_rgb_elas')
@@ -150,11 +150,14 @@ class TrafficLightDetection(object):
         self.shutdown_sub = rospy.Subscriber('/carina/vehicle/shutdown', Bool, self.shutdown_cb, queue_size=1)
 
         self.elas_sub   = rospy.Subscriber("/carina/perception/stereo/point_cloud", PointCloud2, self.stereo_cloud_callback)
-
+        self.current_pose_sub = rospy.Subscriber('/carina/localization/pose', PoseWithCovarianceStamped, self.pose_cb, queue_size=1)
 
 
 
         #publisher
+        self.pub_obj = rospy.Publisher("/carina/perception/camera/signs_bb_yolo", BoundingBoxArray, queue_size=1)
+        self.pub_img = rospy.Publisher('/carina/perception/camera/image_bb_yolo', Image, queue_size=1)
+
         self.odom_objs_tfsign_pub = rospy.Publisher("/carina/perception/stereo/traffic_sign_odom_yolo", ObstacleArray, queue_size = 1)
         self.odom_objs_tfsign_marker_pub = rospy.Publisher("/carina/perception/stereo/traffic_sign_odom_marker_yolo", MarkerArray, queue_size = 1)
 
@@ -167,8 +170,8 @@ class TrafficLightDetection(object):
         self.odom_cloud_signs_pub = rospy.Publisher("/carina/perception/stereo/cloud_tf_signs_odom_yolo", PointCloud2, queue_size = 1)
         self.speed_constraint_pub = rospy.Publisher('/carina/control/speed_constraint', SpeedConstraint, queue_size=1)
 
-
-
+    def pose_cb(self, msg):
+        self.current_pose = msg
 
     def stereo_cloud_callback(self,data):
         # img =copy.deepcopy(self.img)
@@ -180,8 +183,9 @@ class TrafficLightDetection(object):
 
 
     def imageCallback(self,im):
+        start_time = time.time()
         # Initialize
-        if self.pc is None:
+        if self.pc is None or self.current_pose is None:
             return
         stamp=im.header.stamp
         img0 = None
@@ -229,6 +233,7 @@ class TrafficLightDetection(object):
                     self.pub_img.publish(self.cvbridge.cv2_to_imgmsg(img0, "bgr8"))
                 except CvBridgeError as e:
                     print (e)
+        print("--- %s seconds ---" % (time.time() - start_time))
 
     def process_detect(self, objects,img_orig,stamp,point_cloud):
         global list_obj, pub_obj, pub_img, color, names#, prob_cut#, stamp

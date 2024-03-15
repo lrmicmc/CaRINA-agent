@@ -4,7 +4,7 @@ import math
 import roslib
 import rospy
 import sys
-
+import time
 from ackermann_msgs.msg import AckermannDriveStamped
 from msgs_action.msg import VehicleState, Throttle, Brake, SteeringAngle
 from std_msgs.msg import Bool
@@ -49,7 +49,7 @@ class LongitudinalControl(object):
 		self.previous_emergency_stop = False
 		self.speed_constraint = -1
 		self.last_speed_zero = None
-		self.timeout_emergency_stop = 160.0
+		self.timeout_emergency_stop = 240.0
 		#self.timeout_emergency_stop = 90
 		self.ignore_emergency_stop = False
 		self.longitudinal_control = PID_long_control(0)
@@ -78,7 +78,7 @@ class LongitudinalControl(object):
 		# print('self.speed_constraint ',self.speed_constraint)
 		# print('self.energency stop ',self.emergency_stop)
 		# print('self.frames_save_speed_constraint ', self.frames_save_speed_constraint)
-
+		start_time = time.time()
 		stamp=data.header.stamp
 		self.reference_speed = data.drive.speed
 
@@ -172,7 +172,7 @@ class LongitudinalControl(object):
 			self.longitudinal_control.integ_error = 0
 			# print ("\033[93m[Longitudinal Control]\033[0m Hand Brake!!!")    
 		self.hand_brake_pub.publish(hand_brake)
-		
+		print("--- %s seconds ---" % (time.time() - start_time))
 
 	def emergency_stop_cb(self, msg):
 		if msg.stop_now or self.previous_emergency_stop:

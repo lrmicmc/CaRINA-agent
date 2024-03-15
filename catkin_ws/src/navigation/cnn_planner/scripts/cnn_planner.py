@@ -20,7 +20,7 @@ from tf2_geometry_msgs import *
 import tf
 from cv_bridge import CvBridge, CvBridgeError
 from msgs_perception.msg import ObstacleArray, Obstacle
-
+import time
 
 from scipy import interpolate
 import numpy as np
@@ -192,6 +192,8 @@ class CNNPlanner(object):
 
 
 	def dinamic_objects_sub(self, msg):
+		if self.current_pose==None:
+			return
 
 		map_scale=8
 		size_image=700
@@ -379,6 +381,8 @@ class CNNPlanner(object):
 		# self.steering_angle=msg.drive.steering_angle
 		
 	def pose_cb(self,msg):
+		start_time = time.time()
+
 		self.stamp=msg.header.stamp
 		self.current_pose = msg
 
@@ -488,7 +492,7 @@ class CNNPlanner(object):
 
 
 		if self.stereo_bev_image is None or self.current_pose is None or self.lidar_bev_image is None or self.global_plan is None or self.global_plan.points==[] or \
-									self.old_poses_list is None and len(self.raw_path_plan_points or self.foot_print_objects_image is None)>0:
+									self.old_poses_list is None or  self.foot_print_objects_image is None and len(self.raw_path_plan_points)>0:
 			print('return')
 			return
 
@@ -781,7 +785,7 @@ class CNNPlanner(object):
 			self.path_ros_pub.publish(self.msg_replan_path_p)
 
 
-
+		print("--- %s seconds ---" % (time.time() - start_time))
 
 
 	def lidar_bev_imageCallback(self,im):
