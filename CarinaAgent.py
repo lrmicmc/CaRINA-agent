@@ -47,8 +47,8 @@ class CarinaAgent(AutonomousAgent):
 		self.image_width=parameters["cameras"]["stereo"]["width"]#1600 
 		self.image_height=parameters["cameras"]["stereo"]["height"]#1600
 
-		self.back_image_width=parameters["cameras"]["mono"]["cam_back"]["width"]#1600 
-		self.back_image_height=parameters["cameras"]["mono"]["cam_back"]["height"]#1600
+		# self.back_image_width=parameters["cameras"]["mono"]["cam_back"]["width"]#1600 
+		# self.back_image_height=parameters["cameras"]["mono"]["cam_back"]["height"]#1600
 		# self.baseline=0.2986      #argo
 		##############################################
 		simulator_version = os.environ.get('CARLA_VERSION')
@@ -158,8 +158,8 @@ class CarinaAgent(AutonomousAgent):
 		self.img_right_rect_color_pub = rospy.Publisher('/carina/sensor/camera/right/image_rect_color', Image, queue_size=1)
 		self.img_right_info_pub = rospy.Publisher('/carina/sensor/camera/right/camera_info', CameraInfo,queue_size=1)
 
-		self.img_back_rect_color_pub = rospy.Publisher('/carina/sensor/camera/back/image_rect_color', Image, queue_size=1)
-		self.img_back_info_pub = rospy.Publisher('/carina/sensor/camera/back/camera_info', CameraInfo,queue_size=1)
+		# self.img_back_rect_color_pub = rospy.Publisher('/carina/sensor/camera/back/image_rect_color', Image, queue_size=1)
+		# self.img_back_info_pub = rospy.Publisher('/carina/sensor/camera/back/camera_info', CameraInfo,queue_size=1)
 
 		#subscriber
 		self.throttle_sub = rospy.Subscriber('/carina/control/throttle_cmd', Throttle, self.throttle_cb)
@@ -184,9 +184,9 @@ class CarinaAgent(AutonomousAgent):
 						'width':self.image_width, 'height': self.image_height, 'fov':self.fov, 'sensor_tick': 0.0, 'id': 'CameraRight'}
 		sensors.append(CameraRight)
 
-		CameraBack={'type': 'sensor.camera.rgb', 'x':0., 'y':self.baseline, 'z':2.8, 'roll':0.0, 'pitch':0.0, 'yaw':180.0,
-						'width': self.back_image_width, 'height': self.back_image_height, 'fov':self.fov, 'sensor_tick': 0.0, 'id': 'CameraBack'}
-		sensors.append(CameraBack)
+		# CameraBack={'type': 'sensor.camera.rgb', 'x':0., 'y':self.baseline, 'z':2.8, 'roll':0.0, 'pitch':0.0, 'yaw':180.0,
+		# 				'width': self.back_image_width, 'height': self.back_image_height, 'fov':self.fov, 'sensor_tick': 0.0, 'id': 'CameraBack'}
+		# sensors.append(CameraBack)
 
 		LIDAR={'type': 'sensor.lidar.ray_cast', 'x': 0., 'y': 0.0, 'z': 2.25, 'roll': 0.0, 'pitch': 0.0,
 						'yaw': 0.0, 'channels':64,'points_per_second':350000, 'upper_fov':5.0,
@@ -274,35 +274,35 @@ class CarinaAgent(AutonomousAgent):
 			camera_info_right.P = [fx2, 0, cx, -fx2*self.baseline, 0, fy2, cy, 0, 0, 0, 1.0, 0]
 
 
-			#BACK
-			img_back = sensor_data['CameraBack'][1]
-			img_back = img_back[:,:,0:3]
-			img_back = img_back[:,:,::-1]
-			img_back_flat = np.reshape(img_back, (1, img_back.shape[0]*img_back.shape[1]*3))
+			# #BACK
+			# img_back = sensor_data['CameraBack'][1]
+			# img_back = img_back[:,:,0:3]
+			# img_back = img_back[:,:,::-1]
+			# img_back_flat = np.reshape(img_back, (1, img_back.shape[0]*img_back.shape[1]*3))
 
-			img_back_msg = Image()
-			img_back_msg.header.stamp = stamp
-			img_back_msg.header.frame_id = "stereo"
-			img_back_msg.height = img_back.shape[0]
-			img_back_msg.width = img_back.shape[1]
-			img_back_msg.encoding = 'rgb8'
-			img_back_msg.step=img_back.shape[1]*3
-			img_back_msg.data=img_back_flat[0].tolist()
+			# img_back_msg = Image()
+			# img_back_msg.header.stamp = stamp
+			# img_back_msg.header.frame_id = "stereo"
+			# img_back_msg.height = img_back.shape[0]
+			# img_back_msg.width = img_back.shape[1]
+			# img_back_msg.encoding = 'rgb8'
+			# img_back_msg.step=img_back.shape[1]*3
+			# img_back_msg.data=img_back_flat[0].tolist()
 	
-			camera_info_back= CameraInfo()
-			camera_info_back.header.frame_id = "stereo"
-			camera_info_back.header.stamp = stamp
-			camera_info_back.width = img_back_msg.width
-			camera_info_back.height = img_back_msg.height
-			camera_info_back.distortion_model='plumb_bob'
-			cx = camera_info_back.width/2.0
-			cy = camera_info_back.height/2.0
-			fx2 = camera_info_back.width / (2.0 * np.tan(self.fov * np.pi / 360.0)) #fov=50 (sensor configuration)
-			fy2 = fx2
-			camera_info_back.K = [fx2, 0, cx, 0, fy2, cy, 0, 0, 1]
-			camera_info_back.D = [0, 0, 0, 0, 0]
-			camera_info_back.R = [1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0]
-			camera_info_back.P = [fx2, 0, cx, 0, 0, fy2, cy, 0, 0, 0, 1.0, 0]
+			# camera_info_back= CameraInfo()
+			# camera_info_back.header.frame_id = "stereo"
+			# camera_info_back.header.stamp = stamp
+			# camera_info_back.width = img_back_msg.width
+			# camera_info_back.height = img_back_msg.height
+			# camera_info_back.distortion_model='plumb_bob'
+			# cx = camera_info_back.width/2.0
+			# cy = camera_info_back.height/2.0
+			# fx2 = camera_info_back.width / (2.0 * np.tan(self.fov * np.pi / 360.0)) #fov=50 (sensor configuration)
+			# fy2 = fx2
+			# camera_info_back.K = [fx2, 0, cx, 0, fy2, cy, 0, 0, 1]
+			# camera_info_back.D = [0, 0, 0, 0, 0]
+			# camera_info_back.R = [1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0]
+			# camera_info_back.P = [fx2, 0, cx, 0, 0, fy2, cy, 0, 0, 0, 1.0, 0]
 			
 			#pubs
 			self.img_left_pub.publish(img_left_msg)     
@@ -312,8 +312,8 @@ class CarinaAgent(AutonomousAgent):
 			self.img_right_rect_color_pub.publish(img_right_msg)             
 			self.img_right_info_pub.publish(camera_info_right)
 
-			self.img_back_rect_color_pub.publish(img_back_msg)             
-			self.img_back_info_pub.publish(camera_info_back)
+			# self.img_back_rect_color_pub.publish(img_back_msg)             
+			# self.img_back_info_pub.publish(camera_info_back)
 
 			# if self.create_dataset_depth==True:
 
@@ -990,8 +990,8 @@ class CarinaAgent(AutonomousAgent):
 			del self.img_right_pub 
 			del self.img_right_rect_color_pub 
 			del self.img_right_info_pub 
-			del self.img_back_rect_color_pub 
-			del self.img_back_info_pub 
+			# del self.img_back_rect_color_pub 
+			# del self.img_back_info_pub 
 			#subscriber
 			del self.throttle_sub
 			del self.brake_sub 

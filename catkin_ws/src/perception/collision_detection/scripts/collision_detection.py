@@ -641,9 +641,9 @@ class CollisionDetection(object):
 						pol_viz.polygon.points.append(p.point)
 					self.tfl_red_area.publish(pol_viz)
 
-			if(l_ob.intersects(self.path_shapely_dilated1) or (l_ob.intersects(self.back_l_ob_ego_dilated) and 'traffic_light_red' in obs.classes) ):
-			# if(l_ob.intersects(self.path_shapely_dilated1)):# or l_ob.intersects(self.back_l_ob_ego_dilated)):
-				print('stoping traffic light red')
+			# if(l_ob.intersects(self.path_shapely_dilated1) or (l_ob.intersects(self.back_l_ob_ego_dilated) and 'traffic_light_red' in obs.classes) ):
+			if(l_ob.intersects(self.path_shapely_dilated1) or l_ob.intersects(self.back_l_ob_ego_dilated)):
+				print('stoping traffic ', obs.classes[0])
 				# plt.plot(x,y, 'ko', markersize=2)
 				# print ('obs traffic light')
 				collision=True
@@ -940,6 +940,10 @@ class CollisionDetection(object):
 					poly = l_ob.intersection(self.path_shapely_dilated1)
 				else:
 					poly = l_ob_tracking.intersection(self.path_shapely_dilated1)
+
+
+				if l_ob_vel_norm.intersects(self.path_shapely_dilated1):
+					continue
 
 				try:
 					xx, yy = poly.coords.xy

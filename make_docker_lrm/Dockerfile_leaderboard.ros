@@ -220,14 +220,17 @@ RUN /bin/bash -c 'source /opt/ros/$ROS_DISTRO/setup.bash; \
   #colcon build --merge-install --install-base /opt/ros/$ROS_DISTRO; \
   #catkin_make install --only-pkg-with-deps carla_ros_bridge -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic'
 
-
-
 COPY .tmp/leaderboard ${LEADERBOARD_ROOT}
-
-
 
 RUN mkdir -p /workspace/results
 RUN chmod +x /workspace/leaderboard/scripts/run_evaluation.sh
+
+
+
+
+
+
+
 
 
 ENV CARLA_VERSION "0.9.10.1"
@@ -239,26 +242,21 @@ ENV TEAM_AGENT ${TEAM_CODE_ROOT}/CarinaAgent.py
 ENV CHALLENGE_TRACK_CODENAME SENSORS
 #ENV CHALLENGE_TRACK_CODENAME MAP
 
+
+
+
+
+
+
+
 ENV GPU_DEVICE_STACK="cuda:0"
-
-
-
-
-
 
 ENV TEAM_CONFIG ${TEAM_CODE_ROOT}/config/agent_params.yaml
 
-
-
-
 COPY .tmp/team_code ${TEAM_CODE_ROOT}
-
-
 
 # cmake agent
 RUN /bin/bash -c 'source /opt/ros/noetic/setup.bash; cd /workspace/team_code/catkin_ws; rm -rf build devel install log; catkin_make -DCMAKE_BUILD_TYPE=Release'
-
-
 
 ########################################################################################################################
 ########################################################################################################################

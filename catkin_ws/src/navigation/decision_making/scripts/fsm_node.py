@@ -191,7 +191,7 @@ class FSM(object):
 				time_to_be_decelerated=5
 				max_break = 3.5
 				# print(dist_to_stop_sign)
-				if dist_to_stop_sign < 6:
+				if dist_to_stop_sign < 5:
 					self.speed_ref = 0.
 					self.time_stopped= msg.header.stamp#rospy.Time().now()
 					self.state = self.STATE_IDLE_STOP
@@ -203,11 +203,11 @@ class FSM(object):
 					
 			#Stay stopped for a predefined time
 			elif self.state == self.STATE_IDLE_STOP:
-				time_to_be_stopped = 5.#3.
+				time_to_be_stopped = 2.
 				# if (rospy.Time().now() - time_stopped).to_sec() > time_to_be_stopped:
 				if (msg.header.stamp - self.time_stopped).to_sec() > time_to_be_stopped:
 					self.state = self.STATE_FOLLOWING_LANE
-					self.frames_ignore_stop=50
+					self.frames_ignore_stop=100
 				else:
 					self.speed_ref = 0.
 
@@ -250,7 +250,7 @@ class FSM(object):
 			
 		self.fsm_state.publish(self.names_state[self.state])
 		self.pub_speed_ref()
-		print("--- %s seconds ---" % (time.time() - start_time))
+		# print("--- %s seconds ---" % (time.time() - start_time))
 
 
 

@@ -22,6 +22,8 @@ class TrafficLightPosition(object):
 	def __init__(self):
 
 		self.markerArray = MarkerArray()
+		self.markerArray_lines_tf_init = MarkerArray()
+
 		self.markerArrayObs = MarkerArray()
 		self.obstacle_Array = ObstacleArray()
 
@@ -320,16 +322,123 @@ class TrafficLightPosition(object):
 		self.obstacle_Array.obstacle=[]
 
 
-
-
-
-
-
+	# def global_plan_cb(self,msg):
+	# 	self.global_plan=msg
+	# 	self.len_global_plan=len(self.global_plan.points)
 
 	def global_plan_cb(self,msg):
 		self.global_plan=msg
 		self.len_global_plan=len(self.global_plan.points)
+		pose_back=None
+		# t = rospy.Duration(1.35) 
 
+		self.markerArray_lines_tf_init.markers=[]
+
+		for index, (pose, option) in enumerate(zip(self.global_plan.points, self.global_plan.road_options)):
+
+			if self.STRAIGHT==option or self.RIGHT==option or self.LEFT==option:
+				g=1.0
+
+				angle = np.arctan2(pose.y-pose_back.y, pose.x-pose_back.x) #* 180 / np.pi
+
+				pose_x=pose.x + math.cos(angle)*1. - math.sin(angle)*1. #ofset 1m in x and y 
+				pose_y=pose.y + math.sin(angle)*1. + math.cos(angle)*1. #ofset 1m in x and y
+
+				pose_xy1=Point()
+				pose_xy1.x=pose_x
+				pose_xy1.y=pose_y
+
+				px = pose.x + math.cos(angle)*45 - math.sin(angle)*1.#ofset 45m in x and 1m in y
+				py = pose.y + math.sin(angle)*45 + math.cos(angle)*1.#ofset 45m in x and 1m in y
+
+				pose_xy2=Point()
+				pose_xy2.x=px
+				pose_xy2.y=py
+
+				marker = Marker()
+				marker.header.frame_id = "map"
+				marker.type = marker.LINE_STRIP
+				marker.action = marker.ADD
+				marker.ns = "multi_tfl"
+				marker.id = index+10001
+				# marker scale
+				marker.scale.x = 6.
+				marker.scale.y = 6.
+				marker.scale.z = 6.
+
+				# marker color
+				marker.color.a = 1.0
+				marker.color.r = 255
+				marker.color.g = 0
+				marker.color.b = 255
+
+				# marker.points.append(pose_back)
+				marker.points.append(pose_xy1)
+				marker.points.append(pose_xy2)
+
+				# marker orientaiton
+				marker.pose.orientation.x = 0.0
+				marker.pose.orientation.y = 0.0
+				marker.pose.orientation.z = 0.0
+				marker.pose.orientation.w = 1.0
+
+				t = rospy.Duration(0) 
+				marker.lifetime = t
+				self.markerArray_lines_tf_init.markers.append(marker)
+
+				pose_x1=pose.x+math.cos(angle)*1.6
+				pose_y1=pose.y+math.sin(angle)*1.6
+
+				pose_x2=pose.x+math.cos(angle)*5.
+				pose_y2=pose.y+math.sin(angle)*5.
+
+				px1 = (pose.x)+math.cos(math.pi/1.4)*(pose_x1-pose.x)+ math.sin(math.pi/1.4)*(pose_y1-pose.y)#rotating line -alpha
+				py1 = (pose.y)-math.sin(math.pi/1.4)*(pose_x1-pose.x)+ math.cos(math.pi/1.4)*(pose_y1-pose.y)
+
+				px2 = (pose.x)+math.cos(math.pi/1.4)*(pose_x2-pose.x)+ math.sin(math.pi/1.4)*(pose_y2-pose.y)
+				py2 = (pose.y)-math.sin(math.pi/1.4)*(pose_x2-pose.x)+ math.cos(math.pi/1.4)*(pose_y2-pose.y)
+
+				pxy1=Point()
+				pxy1.x=px1
+				pxy1.y=py1
+
+				pxy2=Point()
+				pxy2.x=px2
+				pxy2.y=py2
+
+				marker2 = Marker()
+				marker2.header.frame_id = "map"
+				marker2.type = marker2.LINE_STRIP
+				marker2.action = marker2.ADD
+				marker2.ns = "one_tfl"
+				marker2.id = index+10000
+
+				# marker scale
+				marker2.scale.x = 7.
+				marker2.scale.y = 7.
+				marker2.scale.z = 7.
+
+				# marker color
+				marker2.color.a = 1.0
+				marker2.color.r = 255
+				marker2.color.g = 0
+				marker2.color.b = 255
+
+				# marker.points.append(pose_back)
+				marker2.points.append(pxy1)
+				marker2.points.append(pxy2)
+
+				# marker orientaiton
+				marker2.pose.orientation.x = 0.0
+				marker2.pose.orientation.y = 0.0
+				marker2.pose.orientation.z = 0.0
+				marker2.pose.orientation.w = 1.0
+
+				t = rospy.Duration(0) 
+				marker2.lifetime = t
+				self.markerArray_lines_tf_init.markers.append(marker2)
+			pose_back=pose
+		# self.lines_to_traffic_signs_pub.publish(self.markerArray)
 
 
 
@@ -381,8 +490,8 @@ class TrafficLightPosition(object):
 					pose_xy1.x=pose_x
 					pose_xy1.y=pose_y
 
-					px = pose.x + math.cos(angle)*45 - math.sin(angle)*1.#ofset 45m in x and 1m in y
-					py = pose.y + math.sin(angle)*45 + math.cos(angle)*1.#ofset 45m in x and 1m in y
+					px = pose.x + math.cos(angle)*50 - math.sin(angle)*1.#ofset 45m in x and 1m in y
+					py = pose.y + math.sin(angle)*50 + math.cos(angle)*1.#ofset 45m in x and 1m in y
 
 					pose_xy2=Point()
 					pose_xy2.x=px
@@ -471,6 +580,8 @@ class TrafficLightPosition(object):
 					marker2.lifetime = t
 					markerArray.markers.append(marker2)
 			# pose_back=pose
+		for i in self.markerArray_lines_tf_init.markers:
+			markerArray.markers.append(i)
 		self.markerArray = markerArray
 
 		self.lines_to_traffic_signs_pub.publish(self.markerArray)
@@ -496,10 +607,20 @@ class TrafficLightPosition(object):
 
 	def shutdown_cb(self, msg):
 		if msg.data:
-			# del self.signs_object_sub
-			# del self.path_sub
-			# del self.shutdown_sub
-			# del self.traffic_signs_pub
+			del self.pub 
+			del self.pub_obj 
+			del self.poly_path1_pub
+			del self.traffic_signs_pub 
+			del self.lines_to_traffic_signs_pub 
+
+			del self.signs_object_yolo_sub
+			del self.signs_object_sub 
+			del self.shutdown_sub 
+			del self.path_sub 
+			del self.current_pose_sub
+			del self.global_plan_raw_sub
+
+
 			print ("Bye!")
 			rospy.signal_shutdown("finished route")
 
