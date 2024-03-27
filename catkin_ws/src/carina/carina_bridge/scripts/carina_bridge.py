@@ -77,8 +77,18 @@ class CarinaBridge(object):
 			self.lat_ref=None
 			self.lon_ref=None
 			self.datum=None
-		elif not (track_env == Track.MAP or track_env == Track.SENSORS):
-			self.track = 'DATASET'
+		elif track_env=='SENSORS':
+			self.track = Track.SENSORS_QUALIFIER
+			self.lat_ref=0.0
+			self.lon_ref=0.0
+			self.datum=''
+		elif track_env=='MAP':
+			self.track = Track.MAP_QUALIFIER
+			self.lat_ref=None
+			self.lon_ref=None
+			self.datum=None
+		elif track_env=='DATASET':
+			self.track = Track.DATASET
 			self.lat_ref=0
 			self.lon_ref=0
 			self.datum=''
@@ -285,16 +295,17 @@ class CarinaBridge(object):
 		self.speedometer_sub=rospy.Subscriber('/carla/hero/SPEED', CarlaSpeedometer,  self.speed_cb)
 		# self.globalpw_sub=rospy.Subscriber('/carla/hero/global_plan', CarlaRoute,  self.global_plan_world_cb)
 		self.globalp_sub=rospy.Subscriber('/carla/hero/global_plan_gnss', CarlaGnssRoute,  self.global_plan_gps_cb)
-		if self.track == Track.MAP or not (self.track == Track.MAP or self.track == Track.SENSORS):#'DATASET':
+
+		if self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or not (self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER):#'DATASET':
 			self.globalp_gt_sub=rospy.Subscriber('/carla/hero/global_plan_gnss_gt', CarlaGnssRoute,  self.global_plan_gps_gt_cb)
 		# self.status_sub=rospy.Subscriber('/carla/hero/status', Bool,  self.status_cb)
 		self.lidar_sub=rospy.Subscriber('/carla/hero/LIDAR', PointCloud2,  self.lidar_cb)
 		self.imu_sub=rospy.Subscriber('/carla/hero/IMU', Imu,  self.imu_cb)
-		if self.track == Track.MAP or not (self.track == Track.MAP or self.track == Track.SENSORS):#DATASET:
+		if self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or not (self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER):#DATASET:
 			self.opendrive_sub=rospy.Subscriber('/carla/hero/OpenDRIVE', String, self.opendrive_callback  )
 			#if self.track == Track.MAP:
 			self.hdmap_pub = rospy.Publisher('/carina/map/hdmap', HDMapMsg, queue_size=1, latch=True)
-		if self.track == Track.MAP or self.track == Track.SENSORS:  #---->
+		if self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER:  #---->
 			# self.pose_corrected_sub = rospy.Subscriber('/localization/ekf/global', Odometry, self.pose_corrected_cb)
 			self.pose_corrected_sub = rospy.Subscriber('/localization/ekf/global', PoseWithCovarianceStamped, self.pose_corrected_cb)
 		else: #self.track = 'DATASET'
@@ -360,7 +371,7 @@ class CarinaBridge(object):
 			
 		self.steering_angle = -msg.angle/self.max_steering
 
-		if self.lateral_control_noise and not (self.track == Track.MAP or self.track == Track.SENSORS): #DATASET
+		if self.lateral_control_noise and not (self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER): #DATASET
 			self.steering_angle += np.random.normal(0, .50)
 			# print('noise steering_angle', self.steering_angle)
 
@@ -1097,7 +1108,7 @@ class CarinaBridge(object):
 
 
 
-			if 	not (self.track == Track.MAP or self.track == Track.SENSORS):#DATASET:# self.CREATE_DATASET:  #---->
+			if 	not (self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER):#DATASET:# self.CREATE_DATASET:  #---->
 				if self.create_dataset_path:
 					pose = self.gpsToWorld([msg.latitude, msg.longitude, msg.altitude])
 					self.pose=pose
@@ -1145,7 +1156,7 @@ class CarinaBridge(object):
 		self.waypoints=None
 		self.waypoints_raw, self.global_plan_raw_msg = self.routeToWaypoints([self.msg_global_plan.road_options, self.msg_global_plan.coordinates])
 
-		if not (self.track == Track.MAP or self.track == Track.SENSORS): #DATASET
+		if not (self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER): #DATASET
 			self.waypoints_raw_gt, self.global_plan_raw_gt_msg = self.routeToWaypoints([self.msg_global_plan_gt.road_options, self.msg_global_plan_gt.coordinates])
 
 			x_x = np.arange(0, len(self.waypoints_raw_gt))
@@ -1179,7 +1190,7 @@ class CarinaBridge(object):
 		self.route_raw.header.frame_id = 'map'
 		self.route_raw.poses = []
 
-		if not (self.track == Track.MAP or self.track == Track.SENSORS): #DATASET
+		if not (self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER): #DATASET
 			self.waypoints=self.waypoints_raw_gt
 		else:
 			self.waypoints=self.waypoints_raw
@@ -1259,7 +1270,7 @@ class CarinaBridge(object):
 		self.global_plan_raw_pub.publish(self.global_plan_raw_msg)#GlobalPlan
 		self.route_pub.publish(self.route_raw) #Path
 
-		if not (self.track == Track.MAP or self.track == Track.SENSORS): #DATASET
+		if not (self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER): #DATASET
 			self.path_pub.publish(self.route_raw)
 			self.path_ros_pub.publish(self.route_raw)
 
@@ -1388,7 +1399,7 @@ class CarinaBridge(object):
 
 
 		#Dataset
-		if self.track == Track.MAP or self.track == Track.SENSORS:  #---->
+		if self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER :  #---->
 			
 			tmsg = TransformStamped()
 			tmsg.header.stamp = rospy.Time().now()#self.stamp#msg.header.stamp
@@ -1444,7 +1455,7 @@ class CarinaBridge(object):
 		# x_h2gps=hero_2_gps_transf.transform.translation.x
 		# y_h2gps=hero_2_gps_transf.transform.translation.y
 		# z_h2gps=hero_2_gps_transf.transform.translation.z
-		if self.track == Track.MAP or self.track == Track.SENSORS:  #---->
+		if self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER :  #---->
 			return
 
 		#Dataset
@@ -1912,11 +1923,11 @@ class CarinaBridge(object):
 			del self.lidar_sub
 			del self.imu_sub
 
-			if self.track == Track.MAP or not (self.track == Track.MAP or self.track == Track.SENSORS):#'DATASET':
+			if self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or not (self.track == Track.MAP self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER ):#'DATASET':
 				del self.opendrive_sub
 				# if self.track == Track.MAP:
 				del self.hdmap_pub
-			if self.track == Track.MAP or self.track == Track.SENSORS:  #---->
+			if self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER :  #---->
 				del self.pose_corrected_sub
 			else: #self.track = 'DATASET'
 				if self.create_dataset_depth:

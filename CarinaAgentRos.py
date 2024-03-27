@@ -63,6 +63,16 @@ class CarinaAgent(ROS1Agent):
 			self.lat_ref=None
 			self.lon_ref=None
 			self.datum=None
+		elif track_env=='SENSORS':
+			self.track = Track.SENSORS_QUALIFIER
+			self.lat_ref=0.0
+			self.lon_ref=0.0
+			self.datum=''
+		elif track_env=='MAP':
+			self.track = Track.MAP_QUALIFIER
+			self.lat_ref=None
+			self.lon_ref=None
+			self.datum=None
 		elif track_env=='DATASET':
 			self.track = Track.DATASET
 			self.lat_ref=0
@@ -82,7 +92,7 @@ class CarinaAgent(ROS1Agent):
 		
 		sensors = []
 
-		if not self.track == Track.SENSORS: #self.track == Track.DATASET:
+		if not (self.track == Track.SENSORS  or self.track == Track.SENSORS_QUALIFIER): #self.track == Track.DATASET:
 			OpenDRIVE={'type': 'sensor.opendrive_map', 'reading_frequency': 1, 'id': 'OpenDRIVE'}
 			sensors.append(OpenDRIVE)
 
@@ -114,7 +124,7 @@ class CarinaAgent(ROS1Agent):
 
 
 		# if self.track == Track.DATASET:
-		if not (self.track == Track.MAP or self.track == Track.SENSORS):
+		if not (self.track == Track.MAP or self.track == Track.SENSORS  or self.track == Track.MAP_QUALIFIER  or self.track == Track.SENSORS_QUALIFIER):
 			if self.create_dataset_depth==True:
 				# self.fov=30.6
 				depthCameraLeft={'type': 'sensor.camera.depth', 'x':0., 'y':0.0, 'z':2.8, 'roll':0.0, 'pitch':0.0, 'yaw':0.0,
