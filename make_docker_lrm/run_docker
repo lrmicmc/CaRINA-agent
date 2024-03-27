@@ -1,0 +1,3 @@
+sudo docker run --rm --net=host --runtime=nvidia -e --gpus=2 leaderboard-map:latest ./leaderboard/scripts/run_evaluation.sh
+
+sudo docker run --rm --net=host --runtime=nvidia --gpus '"device=1"' leaderboard-sensors-l2:latest ./leaderboard/scripts/run_evaluation.sh

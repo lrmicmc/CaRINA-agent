@@ -1,0 +1,39 @@
+track2
+roslaunch  carina_description  carina2.launch 
+
+track2 
+roslaunch  velodyne_height_map  height_map.launch
+
+track2 
+roslaunch  obstacle_detection  obstacle_detection.launch
+
+track2 
+roslaunch  dbscan_pointcloud  clustering.launch
+
+track2 
+roslaunch  elas_lrm  elas_carla.launch
+
+track2 
+roslaunch  camera_signs_detection  signs_detection.launch
+
+track2 
+roslaunch  tfsignals_stereo2_3d  stereo2odom.launch
+
+track2 
+roslaunch  traffic_signs  detector.launch
+
+track2 
+roslaunch  mpc_traj_generator  mpc_control.launch
+
+track2 
+roslaunch  decision_making  decision_making.launch
+
+track2 
+roslaunch  global_plan_monitor  global_plan_monitor.launch
+
+track2 
+roslaunch  control  longitudinal_control.launch
+
+track2 
+roslaunch  local_path_planning  path_planning.launch
+
