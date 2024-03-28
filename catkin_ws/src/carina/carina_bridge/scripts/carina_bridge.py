@@ -77,12 +77,12 @@ class CarinaBridge(object):
 			self.lat_ref=None
 			self.lon_ref=None
 			self.datum=None
-		elif track_env=='SENSORS':
+		elif track_env=='SENSORS_QUALIFIER':
 			self.track = Track.SENSORS_QUALIFIER
 			self.lat_ref=0.0
 			self.lon_ref=0.0
 			self.datum=''
-		elif track_env=='MAP':
+		elif track_env=='MAP_QUALIFIER':
 			self.track = Track.MAP_QUALIFIER
 			self.lat_ref=None
 			self.lon_ref=None
