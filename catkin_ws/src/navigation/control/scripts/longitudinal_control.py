@@ -49,7 +49,7 @@ class LongitudinalControl(object):
 		self.previous_emergency_stop = False
 		self.speed_constraint = -1
 		self.last_speed_zero = None
-		self.timeout_emergency_stop = 240.0
+		self.timeout_emergency_stop = 1240.0
 		#self.timeout_emergency_stop = 90
 		self.ignore_emergency_stop = False
 		self.longitudinal_control = PID_long_control(0)
@@ -82,7 +82,7 @@ class LongitudinalControl(object):
 		stamp=data.header.stamp
 		self.reference_speed = data.drive.speed
 
-		if self.current_speed > 2.5:
+		if self.current_speed > 4.1:
 			curvature = abs(np.tan(data.drive.steering_angle)/2.85) #Axis distance
 			max_lateral_acceleration = 4#1#0.05
 			max_reference_speed = np.sqrt(max_lateral_acceleration*(1./curvature))

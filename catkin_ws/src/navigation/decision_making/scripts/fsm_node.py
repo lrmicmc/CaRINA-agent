@@ -119,7 +119,7 @@ class FSM(object):
 		# print(time_to_last_odom)
 
 
-		if self.path_received and msg.header.stamp.to_sec() > 1.  and time_to_last_odom < 0.3: # wait 1. sec to start the mission and verify that the odom is published
+		if self.path_received and msg.header.stamp.to_sec() > 0.3  and time_to_last_odom < 0.3: # wait 1. sec to start the mission and verify that the odom is published
 			#No vehicle in front and no traffic light in front
 			if self.state == self.STATE_FOLLOWING_LANE:
 				if self.frames_ignore_stop>0:
@@ -153,18 +153,42 @@ class FSM(object):
 							self.time_decelerate= msg.header.stamp#rospy.Time().now()
 							self.state = self.STATE_DECELERATE
 
-				max_break = 3.0
+				# max_break = 4.0
+
+
+				time_max=5.0
+				time_min=0.5
+
+
+
+
 				time_to_collision_ob = dist_to_obstacle/(self.speed + 1e-6)
 				time_to_collision_tfl = dist_to_traffic_light/(self.speed + 1e-6)
 				time_to_collision=min(time_to_collision_ob,time_to_collision_tfl)
-				time_threshold = 5
-				time_threshold_emergency = 2.51#3
-				if time_to_collision < time_threshold_emergency:
-					self.speed_ref = 0.2#0
-				elif time_to_collision < time_threshold:
-					self.speed_ref = max(0.5, self.speed - max_break*delta_t)
-				else: 
-					self.speed_ref = self.speed_limit_ahead['current_speed_limit']
+
+
+				# time_threshold = 1.5
+				# time_threshold_emergency = 1.#3
+
+				time_max=3.0
+				time_min=0.5
+
+				if time_to_collision > time_min and time_to_collision < time_max:
+
+					speed_percent = 1-((time_max-time_to_collision)/(time_max-time_min))
+
+					self.speed_ref = self.speed_max_param*speed_percent
+
+				elif time_to_collision <= time_min :
+					self.speed_ref = 0.0
+				else:
+					self.speed_ref = self.speed_max_param
+				# if time_to_collision < time_threshold_emergency:
+				# 	self.speed_ref = 0.3#0
+				# elif time_to_collision < time_threshold:
+				# 	self.speed_ref = max(1.0, self.speed - max_break*delta_t)
+				# else: 
+				# 	self.speed_ref = self.speed_limit_ahead['current_speed_limit']
 				# if dist_to_obstacle < 7:
 
 				# if 7<=dist_to_traffic_light<15:

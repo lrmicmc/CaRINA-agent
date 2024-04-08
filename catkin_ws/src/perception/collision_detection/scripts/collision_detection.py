@@ -137,17 +137,6 @@ class CollisionDetection(object):
 
 
 
-	def cnn_path_callback(self, msg):
-		if msg.header.stamp>self.last_path_stamp:
-			# print("[CollisionDetection Node] path received!!!")
-
-			self.last_path_stamp = msg.header.stamp
-			path_msg = msg.path
-			# print(path_msg)
-			arr = np.array([p.point for p in path_msg])
-			# print(arr)
-			self.path = arr[:, 0:2]
-
 	def stop_callback(self, msg):
 		signs=msg.signs
 		stops=[]
@@ -216,6 +205,17 @@ class CollisionDetection(object):
 				# if index+20 < len(self.global_plan.points):
 				# 	print(self.global_plan.points[index])
 
+
+	def cnn_path_callback(self, msg):
+		if msg.header.stamp>self.last_path_stamp:
+			# print("[CollisionDetection Node] path received!!!")
+
+			self.last_path_stamp = msg.header.stamp
+			path_msg = msg.path
+			# print(path_msg)
+			arr = np.array([p.point for p in path_msg])
+			# print(arr)
+			self.path = arr[:, 0:2]
 
 	def path_callback(self, msg):
 		#Path callback
@@ -291,12 +291,12 @@ class CollisionDetection(object):
 		i_monitor_path=i_min_dist2path
 
 
-		if(i_monitor_path+35>=len(self.path)):
+		if(i_monitor_path+40>=len(self.path)):
 			path_ahead_1=self.path[  i_monitor_path:min(i_monitor_path,len(self.path))     , 0:2]
 			path_ahead_2=self.path[len(self.path)-1:len(self.path), 0:2]
 		else:
-			path_ahead_1=self.path[i_monitor_path+14:i_monitor_path+35, 0:2]
-			path_ahead_2=self.path[i_monitor_path+35:len(self.path), 0:2]
+			path_ahead_1=self.path[i_monitor_path+14:i_monitor_path+40, 0:2]
+			path_ahead_2=self.path[i_monitor_path+40:len(self.path), 0:2]
 
 		# print ('len path', len(path_ahead_1))
 		# print ('len path2', len(path_ahead_2))
@@ -304,7 +304,7 @@ class CollisionDetection(object):
 		if len(path_ahead_1)<7 :  #or  len(path_ahead_2)<1  or  i_monitor_path>len(self.path)-5:
 				collision_constraint = SpeedConstraint()
 				collision_constraint.header.stamp = rospy.Time().now()
-				collision_constraint.speed = 0.20
+				collision_constraint.speed = 0.30
 				collision_constraint.reason = "\033[31m[From collision_node] Hight risk of collision path ended: \033[0m" 
 				print (collision_constraint.reason)
 				self.speed_constraint_pub.publish(collision_constraint)
@@ -616,7 +616,7 @@ class CollisionDetection(object):
 			z=obs.pose.position.z
 
 			l_ob = Point(x, y)
-			if self.track_env=='SENSORS' or self.track_env=='MAP':
+			if self.track_env=='SENSORS' or self.track_env=='MAP' or self.track_env=='MAP_QUALIFIER' or self.track_env=='SENSORS_QUALIFIER':
 				l_ob = l_ob.buffer(min([obs.scale.x, obs.scale.y])/2)###dilated obstacle
 			else:
 				l_ob = l_ob.buffer(.1)###dilated obstacle dataset gt
@@ -931,7 +931,7 @@ class CollisionDetection(object):
 			elif(l_ob.intersects(self.path_shapely_dilated1) or l_ob_tracking.intersects(self.path_shapely_dilated1) or l_ob_vel_norm.intersects(self.path_shapely_dilated1)):
 				collision_constraint = SpeedConstraint()
 				collision_constraint.header.stamp = rospy.Time().now()
-				collision_constraint.speed = 0.20
+				collision_constraint.speed = 0.40
 				collision_constraint.reason = "\033[31m[From collision_node] Hight risk of collision incoming obstacle: \033[0m" 
 				# print (collision_constraint.reason)
 				self.speed_constraint_pub.publish(collision_constraint)

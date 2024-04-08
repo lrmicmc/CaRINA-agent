@@ -37,8 +37,8 @@ class CarinaAgent(ROS1Agent):
 		self.image_width=parameters["cameras"]["stereo"]["width"]#1600 
 		self.image_height=parameters["cameras"]["stereo"]["height"]#1600
 
-		self.back_image_width=parameters["cameras"]["mono"]["cam_back"]["width"]#1600 
-		self.back_image_height=parameters["cameras"]["mono"]["cam_back"]["height"]#1600		# self.baseline=0.2986      #argo
+		# self.back_image_width=parameters["cameras"]["mono"]["cam_back"]["width"]#1600 
+		# self.back_image_height=parameters["cameras"]["mono"]["cam_back"]["height"]#1600		# self.baseline=0.2986      #argo
 		##############################################
 		# print(self.fov, self.baseline, self.image_width, self.image_height)
 
@@ -70,9 +70,9 @@ class CarinaAgent(ROS1Agent):
 			self.datum=''
 		elif track_env=='MAP_QUALIFIER':
 			self.track = Track.MAP_QUALIFIER
-			self.lat_ref=None
-			self.lon_ref=None
-			self.datum=None
+			self.lat_ref=0.0
+			self.lon_ref=0.0
+			self.datum=''
 		elif track_env=='DATASET':
 			self.track = Track.DATASET
 			self.lat_ref=0
@@ -92,7 +92,7 @@ class CarinaAgent(ROS1Agent):
 		
 		sensors = []
 
-		if not (self.track == Track.SENSORS  or self.track == Track.SENSORS_QUALIFIER): #self.track == Track.DATASET:
+		if not (self.track == Track.SENSORS  or self.track == Track.SENSORS_QUALIFIER or self.track == Track.MAP_QUALIFIER): #self.track == Track.DATASET:
 			OpenDRIVE={'type': 'sensor.opendrive_map', 'reading_frequency': 1, 'id': 'OpenDRIVE'}
 			sensors.append(OpenDRIVE)
 
@@ -104,9 +104,9 @@ class CarinaAgent(ROS1Agent):
 						'width':self.image_width, 'height': self.image_height, 'fov':self.fov, 'sensor_tick': 0.0, 'id': 'CameraRight'}
 		sensors.append(CameraRight)
 
-		CameraBack={'type': 'sensor.camera.rgb', 'x':0., 'y':self.baseline, 'z':2.8, 'roll':0.0, 'pitch':0.0, 'yaw':-np.pi,
-						'width': self.back_image_width, 'height': self.back_image_height, 'fov':self.fov, 'sensor_tick': 0.0, 'id': 'CameraBack'}
-		sensors.append(CameraBack)
+		# CameraBack={'type': 'sensor.camera.rgb', 'x':0., 'y':self.baseline, 'z':2.8, 'roll':0.0, 'pitch':0.0, 'yaw':-np.pi,
+		# 				'width': self.back_image_width, 'height': self.back_image_height, 'fov':self.fov, 'sensor_tick': 0.0, 'id': 'CameraBack'}
+		# sensors.append(CameraBack)
 
 		LIDAR={'type': 'sensor.lidar.ray_cast', 'x': 0., 'y': 0.0, 'z': 2.25, 'roll': 0.0, 'pitch': 0.0,
 						'yaw': 0.0, 'channels':64,'points_per_second':350000, 'upper_fov':5.0,

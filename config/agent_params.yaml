@@ -1,9 +1,9 @@
 cameras:
   stereo:
-    fov: 71 #91 #122 #cameras fov     #fov=30.6             #cameras fov  argo
+    fov: 80 #71 #91 #122 #cameras fov     #fov=30.6             #cameras fov  argo
     baseline: 0.24    #baseline=0.2986      #argo
-    width: 1400 
-    height: 1400
+    width: 1000 
+    height: 1000
 
   mono:
     cam0:

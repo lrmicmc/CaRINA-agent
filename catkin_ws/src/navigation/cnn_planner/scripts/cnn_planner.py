@@ -43,7 +43,7 @@ class CNNPlanner(object):
 		self.tf2_buffer_map2vel = tf2_ros.Buffer()
 		self.tf2_listener_map2vel = tf2_ros.TransformListener(self.tf2_buffer_map2vel)
 
-		self.time_threshold_to_pub_path=8 #publish path each 8 secs
+		self.time_threshold_to_pub_path=2 #publish path each 8 secs
 
 		self.stamp=rospy.Time.now()
 
@@ -526,11 +526,11 @@ class CNNPlanner(object):
 
 
 		if time_stoped > 10.:
-			self.time_threshold_to_pub_path=1.
+			self.time_threshold_to_pub_path=0.5
 
 		# print( dist, time_from_last_path, self.time_threshold_to_pub_path, time_from_last_replanning)
 
-		if dist>11.0 or (time_from_last_path > self.time_threshold_to_pub_path \
+		if dist>3.0 or (time_from_last_path > self.time_threshold_to_pub_path \
 			 and time_from_last_replanning > 12.0):
 
 
@@ -710,7 +710,7 @@ class CNNPlanner(object):
 		# time_from_last_replanning = (rospy.Time().now() - self.time_last_replanning).to_sec()
 
 		# print('cnn planner: time_stoped ',time_stoped, 'time_from_last_path ', time_from_last_path, 'time_from_last_replanning ',time_from_last_replanning, 'do_replanning ', self.do_replanning)
-		if time_stoped > self.stoped_threshold and not(self.publishing_replanning) and time_from_last_path > 2. \
+		if time_stoped > self.stoped_threshold and not(self.publishing_replanning) and time_from_last_path > 0.3 \
 			and time_from_last_replanning > 200 and self.last_path_published is not None \
 			and self.do_replanning:
 			

@@ -84,9 +84,9 @@ class CarinaBridge(object):
 			self.datum=''
 		elif track_env=='MAP_QUALIFIER':
 			self.track = Track.MAP_QUALIFIER
-			self.lat_ref=None
-			self.lon_ref=None
-			self.datum=None
+			self.lat_ref=0.0
+			self.lon_ref=0.0
+			self.datum=''
 		elif track_env=='DATASET':
 			self.track = Track.DATASET
 			self.lat_ref=0
@@ -260,9 +260,9 @@ class CarinaBridge(object):
 		self.img_right_pub = rospy.Publisher('/carina/sensor/camera/right/image_raw', Image, queue_size=1)
 		self.img_right_rect_color_pub = rospy.Publisher('/carina/sensor/camera/right/image_rect_color', Image, queue_size=1)
 		self.img_right_info_pub = rospy.Publisher('/carina/sensor/camera/right/camera_info', CameraInfo,queue_size=1)
-		self.img_back_pub = rospy.Publisher('/carina/sensor/camera/back/image_raw', Image, queue_size=1)
-		self.img_back_rect_color_pub = rospy.Publisher('/carina/sensor/camera/back/image_rect_color', Image, queue_size=1)
-		self.img_back_info_pub = rospy.Publisher('/carina/sensor/camera/back/camera_info', CameraInfo,queue_size=1)
+		# self.img_back_pub = rospy.Publisher('/carina/sensor/camera/back/image_raw', Image, queue_size=1)
+		# self.img_back_rect_color_pub = rospy.Publisher('/carina/sensor/camera/back/image_rect_color', Image, queue_size=1)
+		# self.img_back_info_pub = rospy.Publisher('/carina/sensor/camera/back/camera_info', CameraInfo,queue_size=1)
 		self.control_carla_pub = rospy.Publisher('/carla/hero/vehicle_control_cmd',CarlaEgoVehicleControl, queue_size=1)
 		# self.pub_marker_obstacles = rospy.Publisher('/carina/perception/dataset/obstacles_marker_array', MarkerArray, queue_size=1)
 		# self.pub_obstacles = rospy.Publisher('/carina/perception/dataset/obstacles_array', ObstacleArray, queue_size=1)
@@ -289,8 +289,8 @@ class CarinaBridge(object):
 		self.caml_sub=rospy.Subscriber('/carla/hero/CameraLeft/image', Image, self.camera_left_rgb_cb)
 		self.caminfor_sub=rospy.Subscriber('/carla/hero/CameraRight/camera_info', CameraInfo, self.cam_info_right_rgb_cb)
 		self.camr_sub=rospy.Subscriber('/carla/hero/CameraRight/image', Image, self.camera_right_rgb_cb)
-		self.caminfor_sub=rospy.Subscriber('/carla/hero/CameraBack/camera_info', CameraInfo, self.cam_info_back_rgb_cb)
-		self.camr_sub=rospy.Subscriber('/carla/hero/CameraBack/image', Image, self.camera_back_rgb_cb)
+		# self.caminfor_sub=rospy.Subscriber('/carla/hero/CameraBack/camera_info', CameraInfo, self.cam_info_back_rgb_cb)
+		# self.camr_sub=rospy.Subscriber('/carla/hero/CameraBack/image', Image, self.camera_back_rgb_cb)
 		self.gps_sub=rospy.Subscriber('/carla/hero/GPS', NavSatFix,  self.gps_geodesic_cb)
 		self.speedometer_sub=rospy.Subscriber('/carla/hero/SPEED', CarlaSpeedometer,  self.speed_cb)
 		# self.globalpw_sub=rospy.Subscriber('/carla/hero/global_plan', CarlaRoute,  self.global_plan_world_cb)
@@ -422,18 +422,18 @@ class CarinaBridge(object):
 		img_left_msg.step=msg.step#img_left.shape[1]*3
 		img_left_msg.data=msg.data#img_left_flat[0].tolist()
 		self.img_left_msg=img_left_msg
-		if self.camera_info_left is not None and self.camera_info_right is not None and self.img_right_msg is not None  and self.img_back_msg is not None:
+		if self.camera_info_left is not None and self.camera_info_right is not None and self.img_right_msg is not None:  #and self.img_back_msg is not None:
 			self.img_left_info_pub.publish(self.camera_info_left)
 			self.img_right_info_pub.publish(self.camera_info_right)
-			self.img_back_info_pub.publish(self.camera_info_back)
+			# self.img_back_info_pub.publish(self.camera_info_back)
 
 			self.img_left_pub.publish(self.img_left_msg)    
 			self.img_right_pub.publish(self.img_right_msg) 
-			self.img_back_pub.publish(self.img_back_msg) 
+			# self.img_back_pub.publish(self.img_back_msg) 
 
 			self.img_left_rect_color_pub.publish(self.img_left_msg)     
 			self.img_right_rect_color_pub.publish(self.img_right_msg) 
-			self.img_back_rect_color_pub.publish(self.img_back_msg) 
+			# self.img_back_rect_color_pub.publish(self.img_back_msg) 
 		try:
 			self.rgb_image = self.cvbridge.imgmsg_to_cv2(msg, "bgr8")
 		except CvBridgeError as e:
@@ -483,35 +483,35 @@ class CarinaBridge(object):
 		camera_info_right.P = [fx2, 0, cx, -fx2*self.baseline, 0, fy2, cy, 0, 0, 0, 1.0, 0]
 		self.camera_info_right=camera_info_right
 
-	def camera_back_rgb_cb(self, msg):
-		img_back_msg = Image()
-		img_back_msg.header.stamp = rospy.Time().now()#msg.header.stamp
-		img_back_msg.header.frame_id = self.cam_left_frame#"stereo"
-		img_back_msg.height = msg.height#img_back.shape[0]
-		img_back_msg.width = msg.width #img_back.shape[1]
-		img_back_msg.encoding = msg.encoding #'rgb8'
-		img_back_msg.step= msg.step#img_back.shape[1]*3
-		img_back_msg.data= msg.data#img_back_flat[0].tolist()
-		self.img_back_msg = img_back_msg
+	# def camera_back_rgb_cb(self, msg):
+	# 	img_back_msg = Image()
+	# 	img_back_msg.header.stamp = rospy.Time().now()#msg.header.stamp
+	# 	img_back_msg.header.frame_id = self.cam_left_frame#"stereo"
+	# 	img_back_msg.height = msg.height#img_back.shape[0]
+	# 	img_back_msg.width = msg.width #img_back.shape[1]
+	# 	img_back_msg.encoding = msg.encoding #'rgb8'
+	# 	img_back_msg.step= msg.step#img_back.shape[1]*3
+	# 	img_back_msg.data= msg.data#img_back_flat[0].tolist()
+	# 	self.img_back_msg = img_back_msg
 
 		# self.publish_plan_img()
 
-	def cam_info_back_rgb_cb(self, msg):
-		camera_info_back= CameraInfo()
-		camera_info_back.header.frame_id = self.cam_left_frame#"stereo"
-		camera_info_back.header.stamp = rospy.Time().now()#msg.header.stamp #stamp
-		camera_info_back.width =  msg.width#img_back_msg.width
-		camera_info_back.height =  msg.height#img_back_msg.height
-		camera_info_back.distortion_model= msg.distortion_model#'plumb_bob'
-		fx2=msg.K[0]
-		cx=msg.K[2]
-		fy2=msg.K[4]
-		cy=cx=msg.K[5]
-		camera_info_back.K =  msg.K#[fx2, 0, cx, 0, fy2, cy, 0, 0, 1]
-		camera_info_back.D =  msg.D#[0, 0, 0, 0, 0]
-		camera_info_back.R =  msg.R#[1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0]
-		camera_info_back.P = [fx2, 0, cx, -fx2*self.baseline, 0, fy2, cy, 0, 0, 0, 1.0, 0]
-		self.camera_info_back=camera_info_back
+	# def cam_info_back_rgb_cb(self, msg):
+	# 	camera_info_back= CameraInfo()
+	# 	camera_info_back.header.frame_id = self.cam_left_frame#"stereo"
+	# 	camera_info_back.header.stamp = rospy.Time().now()#msg.header.stamp #stamp
+	# 	camera_info_back.width =  msg.width#img_back_msg.width
+	# 	camera_info_back.height =  msg.height#img_back_msg.height
+	# 	camera_info_back.distortion_model= msg.distortion_model#'plumb_bob'
+	# 	fx2=msg.K[0]
+	# 	cx=msg.K[2]
+	# 	fy2=msg.K[4]
+	# 	cy=cx=msg.K[5]
+	# 	camera_info_back.K =  msg.K#[fx2, 0, cx, 0, fy2, cy, 0, 0, 1]
+	# 	camera_info_back.D =  msg.D#[0, 0, 0, 0, 0]
+	# 	camera_info_back.R =  msg.R#[1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0]
+	# 	camera_info_back.P = [fx2, 0, cx, -fx2*self.baseline, 0, fy2, cy, 0, 0, 0, 1.0, 0]
+	# 	self.camera_info_back=camera_info_back
 
 	def camera_aerial_seg_cb(self, msg):
 		if self.actual_imu is None or self.pose_msg is None:
@@ -1065,17 +1065,6 @@ class CarinaBridge(object):
 			return 
 
 
-
-
-
-
-
-
-
-
-
-
-
 		self.stamp=rospy.Time().now()#msg.header.stamp
 		if self.actual_speed is not None and self.steering_angle is not None:# and stamp.to_sec() > 5: #wait 5 secs to publush pose and transforms
 			nav_sat_fix = NavSatFix()
@@ -1091,27 +1080,11 @@ class CarinaBridge(object):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 			if 	not (self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER):#DATASET:# self.CREATE_DATASET:  #---->
 				if self.create_dataset_path:
 					pose = self.gpsToWorld([msg.latitude, msg.longitude, msg.altitude])
 					self.pose=pose
+					self.pose_msg=pose
 					if self.lat_ref==None or self.msg_global_plan_gt==None or 	self.global_path_published:
 						return
 					self.publish_path()
@@ -1148,7 +1121,7 @@ class CarinaBridge(object):
 		# pose_msg.pose.pose.orientation.z = msg.pose.pose.orientation.z
 		# pose_msg.pose.pose.orientation.w = msg.pose.pose.orientation.w
 	
-		if self.stamp.to_sec() >0.5: #waiting 1/2 seconds to publish pose
+		if self.stamp.to_sec() >0.2: #waiting 1/2 seconds to publish pose
 			self.pose=pose_msg
 		
 
@@ -1418,6 +1391,7 @@ class CarinaBridge(object):
 			return
 
 		if self.pose is None or self.yaw is None:
+			print('pose or yaw is none')
 			return
 
 
@@ -1645,7 +1619,7 @@ class CarinaBridge(object):
 			# 													int(new_pose.pose.position.x*scale+(size_image/3))), 10, (b*255,g*255,r*255), thickness)
 			#if index==self.next_index_goal_plan:          
 			dist_to_goal =np.linalg.norm(np.array([pose.x, pose.y]) - 
-														np.array([self.pose_msg.pose.pose.position.x, self.pose_msg.pose.pose.position.y]))#dist between ego and the next goal
+														np.array([self.pose.pose.pose.position.x, self.pose.pose.pose.position.y]))#dist between ego and the next goal
 			if dist_to_goal<7.:  ## if the ego achieve the goal
 				self.next_index_goal_plan=index#self.next_index_goal_plan+1  #next goal
 				self.option_string_dataset=self.option_string
@@ -1658,7 +1632,7 @@ class CarinaBridge(object):
 		if (self.option_string_dataset=='changelaneleft' or self.option_string_dataset=='changelaneright') :
 			# if self.pose_achieved_y is not None:
 			dist_to_pose_achieved =np.linalg.norm(np.array([self.pose_achieved_x, self.pose_achieved_y]) - 
-														np.array([self.pose_msg.pose.pose.position.x, self.pose_msg.pose.pose.position.y]))
+														np.array([self.pose.pose.pose.position.x, self.pose.pose.pose.position.y]))
 			if dist_to_pose_achieved>7.:
 				self.option_string_dataset='lanefollow'
 
@@ -1923,7 +1897,7 @@ class CarinaBridge(object):
 			del self.lidar_sub
 			del self.imu_sub
 
-			if self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or not (self.track == Track.MAP self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER ):#'DATASET':
+			if self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or not (self.track == Track.MAP or self.track == Track.MAP_QUALIFIER or self.track == Track.SENSORS or self.track == Track.SENSORS_QUALIFIER ):#'DATASET':
 				del self.opendrive_sub
 				# if self.track == Track.MAP:
 				del self.hdmap_pub
