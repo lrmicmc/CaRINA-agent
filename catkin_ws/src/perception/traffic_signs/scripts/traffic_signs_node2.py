@@ -463,7 +463,7 @@ class TrafficLightPosition(object):
 		if(i_monitor_path+64>=len(self.path)):
 			path_ahead_1=self.path[  i_monitor_path:min(i_monitor_path,len(self.path))     , 0:2]
 		else:
-			path_ahead_1=self.path[i_monitor_path+14:i_monitor_path+100, 0:2]
+			path_ahead_1=self.path[i_monitor_path+100:i_monitor_path+150, 0:2]
 
 		path_shapely_1 = LineString(path_ahead_1)
 		self.path_shapely_dilated1 = path_shapely_1.buffer(1.0)
@@ -580,9 +580,13 @@ class TrafficLightPosition(object):
 					marker2.lifetime = t
 					markerArray.markers.append(marker2)
 			# pose_back=pose
-		for i in self.markerArray_lines_tf_init.markers:
-			markerArray.markers.append(i)
-		self.markerArray = markerArray
+
+
+		if len(markerArray.markers)>0:
+			for i in self.markerArray_lines_tf_init.markers:
+				markerArray.markers.append(i)
+
+			self.markerArray = markerArray
 
 		self.lines_to_traffic_signs_pub.publish(self.markerArray)
 

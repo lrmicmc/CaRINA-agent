@@ -49,8 +49,8 @@ class LongitudinalControl(object):
 		self.previous_emergency_stop = False
 		self.speed_constraint = -1
 		self.last_speed_zero = None
-		self.timeout_emergency_stop = 1240.0
-		#self.timeout_emergency_stop = 90
+		self.timeout_emergency_stop = 31.0
+		# self.timeout_emergency_stop = 90
 		self.ignore_emergency_stop = False
 		self.longitudinal_control = PID_long_control(0)
 
@@ -98,16 +98,6 @@ class LongitudinalControl(object):
 
 		self.frames_save_speed_constraint+=1
 
-		accel = 0.0
-		deccel = 0.0
-		c, error = self.longitudinal_control.generate_accel(self.current_speed, self.reference_speed)
-	   
-
-		if c > 0:
-			accel = min(1.0, 2*c)        
-			# accel = min(1.0, 2*c)        
-		else:
-			deccel = min(0.001, 0.0001*abs(c))
 
 		# #maybe the better way to do this is set reference_speed to 0.0, to avoid suddently stop
 		if self.emergency_stop:
@@ -125,9 +115,13 @@ class LongitudinalControl(object):
 				else:
 					self.ignore_emergency_stop = False
 			if not self.ignore_emergency_stop:
-				deccel = 1.0 
-				accel  = 0.0
+				# deccel = 1.0 
+				# accel  = 0.0
 				self.reference_speed = 0.0
+			else: 
+				# accel  = 0.2
+				self.reference_speed = 0.2
+
 
 			if self.last_speed_zero is not None:
 				# if (rospy.Time().now() - self.self.last_speed_zero).to_sec() >= (self.timeout_emergency_stop + 8.0):
@@ -142,7 +136,24 @@ class LongitudinalControl(object):
 		if self.current_speed < 2. and self.reference_speed > 2.: 
 			accel=1.
 
+
+
+
+
+
+		accel = 0.0
+		deccel = 0.0
+		c, error = self.longitudinal_control.generate_accel(self.current_speed, self.reference_speed)
+	   
+
+		if c > 0:
+			accel = min(1.0, 2*c)        
+			# accel = min(1.0, 2*c)        
+		else:
+			deccel = min(0.001, 0.0001*abs(c))
+
 		print ('current_speed: ', self.current_speed, '   self.reference_speed: ', self.reference_speed, '   accel: ', accel)#, deccel)
+
 
 		throttle = Throttle()
 		throttle.value = accel

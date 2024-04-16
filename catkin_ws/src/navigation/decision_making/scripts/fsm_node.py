@@ -156,12 +156,6 @@ class FSM(object):
 				# max_break = 4.0
 
 
-				time_max=5.0
-				time_min=0.5
-
-
-
-
 				time_to_collision_ob = dist_to_obstacle/(self.speed + 1e-6)
 				time_to_collision_tfl = dist_to_traffic_light/(self.speed + 1e-6)
 				time_to_collision=min(time_to_collision_ob,time_to_collision_tfl)
@@ -169,20 +163,27 @@ class FSM(object):
 
 				# time_threshold = 1.5
 				# time_threshold_emergency = 1.#3
+				if dist_to_obstacle > 9.5:
+					speed_max = self.speed_max_param
+				else:
+					speed_max = 3.0#self.speed_max_param
 
-				time_max=3.0
+
+				
+
+				time_max=5.0
 				time_min=0.5
 
 				if time_to_collision > time_min and time_to_collision < time_max:
 
 					speed_percent = 1-((time_max-time_to_collision)/(time_max-time_min))
 
-					self.speed_ref = self.speed_max_param*speed_percent
+					self.speed_ref = speed_max*speed_percent
 
 				elif time_to_collision <= time_min :
 					self.speed_ref = 0.0
 				else:
-					self.speed_ref = self.speed_max_param
+					self.speed_ref = speed_max
 				# if time_to_collision < time_threshold_emergency:
 				# 	self.speed_ref = 0.3#0
 				# elif time_to_collision < time_threshold:
@@ -194,7 +195,7 @@ class FSM(object):
 				# if 7<=dist_to_traffic_light<15:
 				# 	print('disto traffic light',dist_to_traffic_light)
 				# 	speed_ref = 1.5
-				if dist_to_traffic_light < 3:
+				if dist_to_traffic_light < 4:
 					# print('disto traffic light',dist_to_traffic_light)
 					self.speed_ref = 0
 

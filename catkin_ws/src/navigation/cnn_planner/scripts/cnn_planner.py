@@ -525,12 +525,12 @@ class CNNPlanner(object):
 		# print('cnn planner: time_stoped ',time_stoped, 'time_from_last_path ', time_from_last_path, 'time_from_last_replanning ',time_from_last_replanning)
 
 
-		if time_stoped > 10.:
+		if time_stoped > 3.:
 			self.time_threshold_to_pub_path=0.5
 
 		# print( dist, time_from_last_path, self.time_threshold_to_pub_path, time_from_last_replanning)
 
-		if dist>3.0 or (time_from_last_path > self.time_threshold_to_pub_path \
+		if dist>12.0 or (time_from_last_path > self.time_threshold_to_pub_path \
 			 and time_from_last_replanning > 12.0):
 
 
