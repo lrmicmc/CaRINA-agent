@@ -356,11 +356,11 @@ class CollisionDetection(object):
 		center_line_egox  = self.curr_pose.pose.pose.position.x
 		center_line_egoy  = self.curr_pose.pose.pose.position.y
 
-		orig_line_egox  = center_line_egox+math.cos(angle_ori_hero)*2.25
-		orig_line_egoy  = center_line_egoy+math.sin(angle_ori_hero)*2.25
+		orig_line_egox  = center_line_egox+math.cos(angle_ori_hero)*2.75
+		orig_line_egoy  = center_line_egoy+math.sin(angle_ori_hero)*2.75
 
-		fin_line_egox = center_line_egox-math.cos(angle_ori_hero)*2.25
-		fin_line_egoy = center_line_egoy-math.sin(angle_ori_hero)*2.25
+		fin_line_egox = center_line_egox-math.cos(angle_ori_hero)*2.75
+		fin_line_egoy = center_line_egoy-math.sin(angle_ori_hero)*2.75
 
 		back_l_ob_ego = LineString([(orig_line_egox, orig_line_egoy), (fin_line_egox, fin_line_egoy)])
 
@@ -443,7 +443,7 @@ class CollisionDetection(object):
 		# plt.plot(path_ahead_2[:,0], path_ahead_2[:,1], 'bo')
 		# plt.plot(ocup_map[:,0], ocup_map[:,1], 'go', markersize=6)
 			ocup_map_40=ocup_map_cat[dist_pose_obstacle<40.]
-			ocup_map=ocup_map_cat[dist_pose_obstacle<6.5]
+			ocup_map=ocup_map_cat[dist_pose_obstacle<9.5]
 
 		else:
 			ocup_map_40=[]

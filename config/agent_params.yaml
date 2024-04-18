@@ -47,5 +47,5 @@ dataset:
   
 navigation:
   control:
-    max_speed: 8.88 #m/s
+    max_speed:  15.15 #m/s
   replanning: False

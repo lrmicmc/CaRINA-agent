@@ -106,7 +106,7 @@ class CNNPlanner(object):
 		self.last_path_published_ros=None
 
 		self.len_tfl_stop=0
-		self.stoped_threshold=100
+		self.stoped_threshold=11
 
 		self.obstacles_frame_0 =[]
 
@@ -367,10 +367,10 @@ class CNNPlanner(object):
 	def obj_traffic_light_stop_sub(self,msg):
 		obj_tfl_stop=msg
 		self.len_tfl_stop=len(obj_tfl_stop.obstacle)
-		if self.len_tfl_stop > 0:
-			self.stoped_threshold=120
-		else:
-			self.stoped_threshold=100
+		# if self.len_tfl_stop > 0:
+		# 	self.stoped_threshold=120
+		# else:
+		# 	self.stoped_threshold=100
 
 	def global_plan_cb(self,msg):
 		self.global_plan=msg
@@ -513,7 +513,7 @@ class CNNPlanner(object):
 
 
 
-		if self.speed > 0.5:
+		if self.speed > 0.2:
 			self.last_time_run = rospy.Time().now().to_sec()#msg.header.stamp.to_sec()
 
 		time_stoped = (rospy.Time().now().to_sec() - self.last_time_run)
@@ -531,7 +531,7 @@ class CNNPlanner(object):
 		# print( dist, time_from_last_path, self.time_threshold_to_pub_path, time_from_last_replanning)
 
 		if dist>12.0 or (time_from_last_path > self.time_threshold_to_pub_path \
-			 and time_from_last_replanning > 12.0):
+			 and time_from_last_replanning > 5.0):
 
 
 			stamp = rospy.Time().now()#self.stamp#im.header.stamp#rospy.Time().now()
@@ -709,11 +709,11 @@ class CNNPlanner(object):
 		time_from_last_path = rospy.Time().now().to_sec() - self.time_last_path
 		# time_from_last_replanning = (rospy.Time().now() - self.time_last_replanning).to_sec()
 
-		# print('cnn planner: time_stoped ',time_stoped, 'time_from_last_path ', time_from_last_path, 'time_from_last_replanning ',time_from_last_replanning, 'do_replanning ', self.do_replanning)
-		if time_stoped > self.stoped_threshold and not(self.publishing_replanning) and time_from_last_path > 0.3 \
-			and time_from_last_replanning > 200 and self.last_path_published is not None \
+		# print('cnn planner: time_stoped ',time_stoped, 'time_from_last_path ', time_from_last_path, 'time_from_last_replanning ',time_from_last_replanning, 'do_replanning ', self.do_replanning, 'stoped_threshold: ', self.stoped_threshold)
+		if time_stoped > self.stoped_threshold and not(self.publishing_replanning) and time_from_last_path > 0.1 \
+			and time_from_last_replanning > 31 and self.last_path_published is not None \
 			and self.do_replanning:
-			
+			print('replanning')
 			self.publishing_replanning=True
 			self.replan_path_msg.path = []
 			# self.path_msg.path  = []
@@ -722,7 +722,7 @@ class CNNPlanner(object):
 				path.append(p.point[:2])
 
 			path_shapely = LineString(path)
-			offset_path = path_shapely.parallel_offset(2., 'left', join_style=1)
+			offset_path = path_shapely.parallel_offset(3.5, 'left', join_style=1)
 			x, y = offset_path.xy
 			# print(x,y)
 			msg_path = RosPath()

@@ -31,6 +31,12 @@ class PID_long_control:
 		Kp = 0.4
 		Ki = 0.04
 		Kd = 0.001
+
+
+		# Kp = 5
+		# Ki = 0.5
+		# Kd = 1
+
 		# if error <= -1.5:
 		#     print  "\033[93m[Longitudinal Control]\033[0m BRAKE" 
 		#     return -1, error

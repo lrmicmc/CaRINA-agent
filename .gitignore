@@ -8,3 +8,4 @@
 devel/
 build/
 .catkin_workspace
+sgm_gpu_ros/

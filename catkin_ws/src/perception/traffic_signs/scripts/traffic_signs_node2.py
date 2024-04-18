@@ -156,7 +156,9 @@ class TrafficLightPosition(object):
 						continue
 
 					poligon =None
+					print(len(msgobstacle_all))
 					for obj in msgobstacle_all:
+						print( m.ns,  obj.pose.position.z)
 						if len(msgobstacle_all)> 4 and m.ns =="one_tfl":
 							continue
 
@@ -166,7 +168,7 @@ class TrafficLightPosition(object):
 						l_ob = Pointsh(obj.pose.position.x, obj.pose.position.y)
 						l_ob = l_ob.buffer(0.20)###dilated 
 						if m.ns =="one_tfl":
-							l_ob = l_ob.buffer(.40)###dilated
+							l_ob = l_ob.buffer(.60)###dilated
 						poligon =None
 
 						if(l_ob.intersects(back_l_ob_ego_dilated)):

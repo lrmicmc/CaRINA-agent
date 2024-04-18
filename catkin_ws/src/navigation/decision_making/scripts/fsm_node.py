@@ -32,6 +32,7 @@ class FSM(object):
 		# self.speed_limit_ahead = {'dist': 1000, 'current_speed_limit': 9.1*speed_rate, 'next_speed_limit': 9.1*speed_rate}
 		self.speed_limit_ahead = {'dist': 1000, 'current_speed_limit': self.speed_max_param*speed_rate, 'next_speed_limit': self.speed_max_param*speed_rate}
 		# self.speed_limit_ahead = {'dist': 1000, 'current_speed_limit': 0.155*speed_rate, 'next_speed_limit': 0.155*speed_rate}
+		self.vel_mean_objects= 3.33
 
 		self.stop_sign_ahead = {'dist': 1000, 'stamp': None, 'time': None, 'pose': None}
 		self.speed_ref = 0.
@@ -58,6 +59,8 @@ class FSM(object):
 		self.time_stopped=0.
 		self.obstacle_ahead['time'] = rospy.Time().now()
 
+		self.sub_vel_mean_obstacles = rospy.Subscriber('/carina/vel_mean_objects', Float64, self.vel_mean_obj_cb, queue_size=1)
+
 		self.pose_sub = rospy.Subscriber('/carina/localization/pose', PoseWithCovarianceStamped, self.pose_cb, queue_size=1)
 		self.vis_odom_sub = rospy.Subscriber('/localization/odometry/visual', Odometry, self.visual_odom_cb, queue_size=1)
 		self.odom_sub = rospy.Subscriber('/carina/localization/odom', Odometry, self.odom_cb, queue_size=1)
@@ -77,7 +80,10 @@ class FSM(object):
 		# self.vel_pub = rospy.Publisher('/carina/control/vel_ref', Float64, queue_size=1)
 		self.fsm_state = rospy.Publisher('/carina/navigation/fsm_state', String, queue_size=1)
 
+	def vel_mean_obj_cb(self, msg):
+		self.vel_mean_objects=msg.data
 
+		print(self.speed_max_param, self.vel_mean_objects)
 
 	def vehicle_state_cb(self, msg):
 		# print('vehicle state cb')
@@ -125,7 +131,7 @@ class FSM(object):
 				if self.frames_ignore_stop>0:
 					self.frames_ignore_stop=self.frames_ignore_stop-1
 
-				self.speed_ref = self.speed_limit_ahead['current_speed_limit']
+				self.speed_ref = np.max(self.speed_limit_ahead['current_speed_limit']+6, self.vel_mean_objects+2)
 				distances = [dist_to_stop_sign, dist_to_traffic_light, dist_to_obstacle]
 				min_dist_object = np.argmin(distances)
 				if distances[min_dist_object] != 1000:
@@ -145,7 +151,7 @@ class FSM(object):
 				if self.frames_ignore_stop>0:
 					self.frames_ignore_stop=self.frames_ignore_stop-1
 
-				self.speed_ref = self.speed_limit_ahead['current_speed_limit']
+				self.speed_ref = np.max(self.speed_limit_ahead['current_speed_limit'],self.vel_mean_objects+2)
 				distances = [dist_to_stop_sign, dist_to_traffic_light, dist_to_obstacle]
 				min_dist_object = np.argmin(distances)
 				if distances[min_dist_object] != 1000:
@@ -164,7 +170,7 @@ class FSM(object):
 				# time_threshold = 1.5
 				# time_threshold_emergency = 1.#3
 				if dist_to_obstacle > 9.5:
-					speed_max = self.speed_max_param
+					speed_max = np.max(self.speed_max_param, self.vel_mean_objects)
 				else:
 					speed_max = 3.0#self.speed_max_param
 

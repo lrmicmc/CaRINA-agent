@@ -245,8 +245,8 @@ ENV TEAM_AGENT ${TEAM_CODE_ROOT}/CarinaAgentRos.py
 
 #ENV CHALLENGE_TRACK_CODENAME SENSORS
 #ENV CHALLENGE_TRACK_CODENAME MAP
-#ENV CHALLENGE_TRACK_CODENAME MAP_QUALIFIER
-ENV CHALLENGE_TRACK_CODENAME SENSORS_QUALIFIER
+ENV CHALLENGE_TRACK_CODENAME MAP_QUALIFIER
+#ENV CHALLENGE_TRACK_CODENAME SENSORS_QUALIFIER
 ########################################################################################################################
 ########################################################################################################################
 ############                                   END OF CHALLENGE COMMANDS                                         ############
