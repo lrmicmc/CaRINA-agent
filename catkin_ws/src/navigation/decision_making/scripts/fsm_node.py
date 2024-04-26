@@ -83,7 +83,7 @@ class FSM(object):
 	def vel_mean_obj_cb(self, msg):
 		self.vel_mean_objects=msg.data
 
-		print(self.speed_max_param, self.vel_mean_objects)
+		# print(self.speed_max_param, self.vel_mean_objects)
 
 	def vehicle_state_cb(self, msg):
 		# print('vehicle state cb')
@@ -119,19 +119,19 @@ class FSM(object):
 
 
 		delta_t = 1#0.1
-		dist_to_obstacle_threshold = 40.
+		dist_to_obstacle_threshold = 60.
 
 		time_to_last_odom = (msg.header.stamp.to_sec() -self.last_time_odom)
 		# print(time_to_last_odom)
 
 
-		if self.path_received and msg.header.stamp.to_sec() > 0.3  and time_to_last_odom < 0.3: # wait 1. sec to start the mission and verify that the odom is published
+		if self.path_received and msg.header.stamp.to_sec() > 0.3  and time_to_last_odom < 0.5: # wait 1. sec to start the mission and verify that the odom is published
 			#No vehicle in front and no traffic light in front
 			if self.state == self.STATE_FOLLOWING_LANE:
 				if self.frames_ignore_stop>0:
 					self.frames_ignore_stop=self.frames_ignore_stop-1
 
-				self.speed_ref = np.max(self.speed_limit_ahead['current_speed_limit']+6, self.vel_mean_objects+2)
+				self.speed_ref = max(self.speed_limit_ahead['current_speed_limit']+3.5, min(self.vel_mean_objects*2.5, 13.))
 				distances = [dist_to_stop_sign, dist_to_traffic_light, dist_to_obstacle]
 				min_dist_object = np.argmin(distances)
 				if distances[min_dist_object] != 1000:
@@ -151,7 +151,6 @@ class FSM(object):
 				if self.frames_ignore_stop>0:
 					self.frames_ignore_stop=self.frames_ignore_stop-1
 
-				self.speed_ref = np.max(self.speed_limit_ahead['current_speed_limit'],self.vel_mean_objects+2)
 				distances = [dist_to_stop_sign, dist_to_traffic_light, dist_to_obstacle]
 				min_dist_object = np.argmin(distances)
 				if distances[min_dist_object] != 1000:
@@ -169,27 +168,28 @@ class FSM(object):
 
 				# time_threshold = 1.5
 				# time_threshold_emergency = 1.#3
-				if dist_to_obstacle > 9.5:
-					speed_max = np.max(self.speed_max_param, self.vel_mean_objects)
+				if dist_to_obstacle > 12.:
+					speed_max =max(self.speed_limit_ahead['current_speed_limit'], min(self.vel_mean_objects*1.5, 9.))
+					# speed_max = max(self.speed_max_param, self.vel_mean_objects)
 				else:
-					speed_max = 3.0#self.speed_max_param
+					speed_max = 4.0#self.speed_max_param
 
 
 				
 
-				time_max=5.0
-				time_min=0.5
+				time_max=5.
+				time_min=0.4
 
-				if time_to_collision > time_min and time_to_collision < time_max:
-
-					speed_percent = 1-((time_max-time_to_collision)/(time_max-time_min))
+				if time_to_collision <= time_max:
+				# if time_to_collision > time_min and time_to_collision < time_max:
+					speed_percent = max((1-((time_max-time_to_collision)/(time_max-time_min))),0)
 
 					self.speed_ref = speed_max*speed_percent
 
-				elif time_to_collision <= time_min :
-					self.speed_ref = 0.0
+				# elif time_to_collision <= time_min :
+				# 	self.speed_ref = 0.0
 				else:
-					self.speed_ref = speed_max
+					self.speed_ref = speed_max 
 				# if time_to_collision < time_threshold_emergency:
 				# 	self.speed_ref = 0.3#0
 				# elif time_to_collision < time_threshold:
@@ -201,7 +201,7 @@ class FSM(object):
 				# if 7<=dist_to_traffic_light<15:
 				# 	print('disto traffic light',dist_to_traffic_light)
 				# 	speed_ref = 1.5
-				if dist_to_traffic_light < 4:
+				if dist_to_traffic_light < 5:
 					# print('disto traffic light',dist_to_traffic_light)
 					self.speed_ref = 0
 

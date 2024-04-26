@@ -26,6 +26,9 @@ from msgs_navigation.msg import GlobalPlan
 from visualization_msgs.msg import Marker
 from visualization_msgs.msg import MarkerArray
 
+from msgs_action.msg import VehicleState
+
+
 from msgs_navigation.msg import SpeedConstraint
 import os
 import math 
@@ -53,6 +56,8 @@ class CollisionDetection(object):
 		self.obstacles_3d=[]
 		self.obstacles_mot=[]
 		self.obstacles_mot_stereo=[]
+
+		self.vel_ego = 100
 
 
 		self.LANEFOLLOW=0
@@ -101,10 +106,15 @@ class CollisionDetection(object):
 		self.shutdown_sub = rospy.Subscriber('/carina/vehicle/shutdown', Bool, self.shutdown_cb, queue_size=1)
 		self.global_plan_raw_sub = rospy.Subscriber('/carina/navigation/global_plan_raw', GlobalPlan, self.global_plan_cb, queue_size=1)
 		self.obstacles_array_tfl_all_sub = rospy.Subscriber('/carina/perception/lidar/obstacles_array_tfl_all', ObstacleArray, self.obstacle_tfl_cb, queue_size=1)
+		self.state_sub=rospy.Subscriber("/carina/vehicle/state", VehicleState, self.vehicle_state_callback)
 
 
 	def normalize_angle(self, angle):
 		return math.atan2(np.sin(angle), np.cos(angle))
+
+
+	def vehicle_state_callback(self, data):
+	  self.vel_ego = data.drive.speed
 
 
 	def obstacle_tfl_cb(self,msg):
@@ -291,12 +301,15 @@ class CollisionDetection(object):
 		i_monitor_path=i_min_dist2path
 
 
+		warning_corridor = min(i_monitor_path+40 +10 + int(3.5*self.vel_ego), len(self.path) )
+
 		if(i_monitor_path+40>=len(self.path)):
 			path_ahead_1=self.path[  i_monitor_path:min(i_monitor_path,len(self.path))     , 0:2]
 			path_ahead_2=self.path[len(self.path)-1:len(self.path), 0:2]
 		else:
 			path_ahead_1=self.path[i_monitor_path+14:i_monitor_path+40, 0:2]
-			path_ahead_2=self.path[i_monitor_path+40:len(self.path), 0:2]
+			# path_ahead_2=self.path[i_monitor_path+40:len(self.path), 0:2]
+			path_ahead_2=self.path[i_monitor_path+40:warning_corridor, 0:2]
 
 		# print ('len path', len(path_ahead_1))
 		# print ('len path2', len(path_ahead_2))
@@ -442,7 +455,7 @@ class CollisionDetection(object):
 		# plt.plot(path_ahead_1[:,0], path_ahead_1[:,1], 'ro')
 		# plt.plot(path_ahead_2[:,0], path_ahead_2[:,1], 'bo')
 		# plt.plot(ocup_map[:,0], ocup_map[:,1], 'go', markersize=6)
-			ocup_map_40=ocup_map_cat[dist_pose_obstacle<40.]
+			ocup_map_40=ocup_map_cat[dist_pose_obstacle<45.]
 			ocup_map=ocup_map_cat[dist_pose_obstacle<9.5]
 
 		else:
@@ -931,7 +944,7 @@ class CollisionDetection(object):
 			elif(l_ob.intersects(self.path_shapely_dilated1) or l_ob_tracking.intersects(self.path_shapely_dilated1) or l_ob_vel_norm.intersects(self.path_shapely_dilated1)):
 				collision_constraint = SpeedConstraint()
 				collision_constraint.header.stamp = rospy.Time().now()
-				collision_constraint.speed = 0.40
+				collision_constraint.speed = 0.30
 				collision_constraint.reason = "\033[31m[From collision_node] Hight risk of collision incoming obstacle: \033[0m" 
 				# print (collision_constraint.reason)
 				self.speed_constraint_pub.publish(collision_constraint)
@@ -1420,7 +1433,7 @@ class CollisionDetection(object):
 				pose_plan_arr=np.array([x,y])
 				# dist_to_point_instruction = np.linalg.norm(obj_pose-pose_actual)
 				dist_to_plan_point = np.linalg.norm(pose-pose_plan_arr)
-				if dist_to_plan_point>30:
+				if dist_to_plan_point>50:
 					continue
 
 

@@ -113,17 +113,17 @@ class TrafficLightPosition(object):
 				stamp = self.stamp
 				for i in signs_array_light:
 
-					if msgobstacle_all[i].pose.position.z > 2.0:
-						q = self.current_pose.pose.pose.orientation
-						# Get yaw
-						ori = (q.x,
-								q.y, 
-								q.z, 
-								q.w)
-						_, _, theta = tf.transformations.euler_from_quaternion(ori)
+					# if msgobstacle_all[i].pose.position.y > 2.0 and msgobstacle_all[i].pose.position.x > 2.0:
+					# 	q = self.current_pose.pose.pose.orientation
+					# 	# Get yaw
+					# 	ori = (q.x,
+					# 			q.y, 
+					# 			q.z, 
+					# 			q.w)
+					# 	_, _, theta = tf.transformations.euler_from_quaternion(ori)
 
-						msgobstacle_all[i].pose.position.x = msgobstacle_all[i].pose.position.x - 3.50*np.cos(theta)   
-						msgobstacle_all[i].pose.position.y = msgobstacle_all[i].pose.position.y - 3.50*np.sin(theta)  
+					# 	msgobstacle_all[i].pose.position.x = msgobstacle_all[i].pose.position.x - 3.50*np.cos(theta)   
+					# 	msgobstacle_all[i].pose.position.y = msgobstacle_all[i].pose.position.y - 3.50*np.sin(theta)  
 
 					signs_pose.append([msgobstacle_all[i].pose.position.x, msgobstacle_all[i].pose.position.y])
 
@@ -137,7 +137,7 @@ class TrafficLightPosition(object):
 				signs_array = np.array([i for i, d in zip(signs_array_light, dist_sign2path) if (d<self.range_light_dist2path).any()])
 				
 				ego_pose_sh= Pointsh(self.current_pose.pose.pose.position.x, self.current_pose.pose.pose.position.y)
-				ego_pose_sh_dilated = ego_pose_sh.buffer(0.1)###dilated pedestrian
+				ego_pose_sh_dilated = ego_pose_sh.buffer(0.2)###dilated pedestrian
 
 				index=0
 
@@ -156,14 +156,14 @@ class TrafficLightPosition(object):
 						continue
 
 					poligon =None
-					print(len(msgobstacle_all))
+					# print(len(msgobstacle_all))
 					for obj in msgobstacle_all:
-						print( m.ns,  obj.pose.position.z)
-						if len(msgobstacle_all)> 4 and m.ns =="one_tfl":
-							continue
+						# print( m.ns,  obj.pose.position.z)
+						# if len(msgobstacle_all)> 4 and m.ns =="one_tfl":
+						# 	continue
 
-						if obj.pose.position.z > 3.0 and m.ns =="one_tfl":
-							continue
+						# if obj.pose.position.z > 3.0 and m.ns =="one_tfl":
+						# 	continue
 
 						l_ob = Pointsh(obj.pose.position.x, obj.pose.position.y)
 						l_ob = l_ob.buffer(0.20)###dilated 
@@ -314,7 +314,7 @@ class TrafficLightPosition(object):
 
 						if s.type != s.list.UNKNOWN:
 							index = np.where(signs_array_stop==i_min)[0]
-							print ("[Stop Sign Detector] detected stop sign at ({}/{})".format(dist_pose2sign[index], str(dist_min)) )
+							# print ("[Stop Sign Detector] detected stop sign at ({}/{})".format(dist_pose2sign[index], str(dist_min)) )
 						traffic_sign_array.signs.append(s)
 
 		self.traffic_signs_pub.publish(traffic_sign_array)
@@ -416,9 +416,9 @@ class TrafficLightPosition(object):
 				marker2.id = index+10000
 
 				# marker scale
-				marker2.scale.x = 7.
-				marker2.scale.y = 7.
-				marker2.scale.z = 7.
+				marker2.scale.x = 8.
+				marker2.scale.y = 8.
+				marker2.scale.z = 8.
 
 				# marker color
 				marker2.color.a = 1.0

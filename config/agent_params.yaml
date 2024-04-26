@@ -1,6 +1,6 @@
 cameras:
   stereo:
-    fov: 80 #71 #91 #122 #cameras fov     #fov=30.6             #cameras fov  argo
+    fov: 85 #71 #91 #122 #cameras fov     #fov=30.6             #cameras fov  argo
     baseline: 0.24    #baseline=0.2986      #argo
     width: 1000 
     height: 1000
@@ -47,5 +47,5 @@ dataset:
   
 navigation:
   control:
-    max_speed:  15.15 #m/s
+    max_speed:  8. #m/s
   replanning: False
